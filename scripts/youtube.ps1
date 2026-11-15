@@ -35,7 +35,7 @@ function Resolve-TargetVideo([string]$InputPath) {
     if ($InputPath -and (Test-Path $InputPath)) {
         return (Get-Item (Resolve-Path $InputPath))
     }
-    $Latest = Get-ChildItem -Path $VideosDir, (Join-Path $PSScriptRoot "..") -Include "*.mkv", "*.mp4" -File -ErrorAction SilentlyContinue |
+    $Latest = Get-ChildItem -Path "$VideosDir\*", (Join-Path $PSScriptRoot "..\*") -Include "*.mkv", "*.mp4" -File -ErrorAction SilentlyContinue |
         Sort-Object LastWriteTime -Descending |
         Select-Object -First 1
     if (-not $Latest) {
