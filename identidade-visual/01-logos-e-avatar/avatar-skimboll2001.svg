@@ -1,31 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
-  <!-- Fundo Vermelho Oficial Skimboll (#D21D1D) e barra inferior (#B41919) -->
-  <rect width="800" height="800" fill="#D21D1D"/>
-  <rect x="0" y="690" width="800" height="110" fill="#B41919"/>
+  <!-- Avatar Redondo Simples e Limpo (Fundo externo 100% transparente) -->
+  <!-- Círculo Principal Vermelho (#D21D1D) com Anel Duplo Amarelo (#F4E600) -->
+  <circle cx="400" cy="400" r="380" fill="#D21D1D" stroke="#F4E600" stroke-width="24"/>
+  <circle cx="400" cy="400" r="342" fill="none" stroke="#F4E600" stroke-width="6"/>
 
-  <!-- Moldura Amarela Oficial com 20 e 01 nos cantos superiores -->
-  <rect x="36" y="36" width="728" height="728" fill="none" stroke="#F4E600" stroke-width="6"/>
-  <line x1="36" y1="36" x2="36" y2="764" stroke="#F4E600" stroke-width="10"/>
-  <line x1="36" y1="36" x2="764" y2="36" stroke="#F4E600" stroke-width="10"/>
-
-  <!-- Cantos "20" e "01" -->
-  <text x="68" y="96" font-family="'Courier New', monospace" font-size="38" font-weight="900" fill="#F4E600" letter-spacing="2">20</text>
-  <text x="732" y="96" font-family="'Courier New', monospace" font-size="38" font-weight="900" fill="#F4E600" text-anchor="end" letter-spacing="2">01</text>
-
-  <!-- Triângulo Invertido Oficial com "S" central -->
-  <polygon points="265,68 535,68 400,322" fill="none" stroke="#F4E600" stroke-width="18" stroke-linejoin="miter"/>
-  <text x="400" y="212" font-family="'Arial Black', Impact, sans-serif" font-size="112" font-weight="900" fill="#F4E600" text-anchor="middle">S</text>
-
-  <!-- Nome Principal: SKIMBOLL -->
-  <text x="400" y="445" font-family="'Courier New', 'Arial Black', monospace" font-size="86" font-weight="900" fill="#F4E600" text-anchor="middle" letter-spacing="6">
-    SKIMBOLL
-  </text>
-
-  <!-- 4 Linhas Multilíngues Oficiais -->
-  <g font-family="'Courier New', monospace" font-size="33" font-weight="900" fill="#F4E600" text-anchor="middle" letter-spacing="1.5">
-    <text x="400" y="545">Skimboll desde 2001</text>
-    <text x="400" y="598">Skimboll seit 2001</text>
-    <text x="400" y="651">Skimboll since 2001</text>
-    <text x="400" y="718">Skimboll 自 2001 年</text>
-  </g>
+  <!-- Triângulo Invertido Oficial (▽) + S centralizado -->
+  <polygon points="175,215 625,215 400,635" fill="#B41919" stroke="#F4E600" stroke-width="32" stroke-linejoin="miter"/>
+  <text x="400" y="420" font-family="'Arial Black', Impact, sans-serif" font-size="185" font-weight="900" fill="#F4E600" text-anchor="middle">S</text>
 </svg>

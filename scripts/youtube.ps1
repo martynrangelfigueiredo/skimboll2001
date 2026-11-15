@@ -10,7 +10,7 @@
 
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet("Login", "Status", "ExtrairFrames", "PostarVideo", "AtualizarVideo", "GerarThumb", "GerarModelosJogos")]
+    [ValidateSet("Login", "Status", "AtualizarCanal", "ExtrairFrames", "PostarVideo", "AtualizarVideo", "GerarThumb", "GerarModelosJogos")]
     [string]$Acao,
 
     [string]$Jogo = "Auto",
@@ -639,6 +639,39 @@ switch ($Acao) {
         $Info = $Canal.items[0]
         Write-Host "Canal conectado: $($Info.snippet.title) (ID: $($Info.id))" -ForegroundColor Cyan
         Write-Host "Inscritos: $($Info.statistics.subscriberCount) | Videos: $($Info.statistics.videoCount)" -ForegroundColor Yellow
+    }
+
+    "AtualizarCanal" {
+        $Token = Get-AccessToken
+        $Canal = Invoke-RestMethod -Uri "https://www.googleapis.com/youtube/v3/channels?part=brandingSettings&mine=true" -Headers @{ Authorization = "Bearer $Token" }
+        $ChannelId = $Canal.items[0].id
+        $DescCanalPath = Join-Path $PSScriptRoot "..\identidade-visual\descricao-canal-youtube.txt"
+        $DescCanal = [System.IO.File]::ReadAllText((Resolve-Path $DescCanalPath).Path, [System.Text.Encoding]::UTF8)
+
+        $BodyObj = @{
+            id               = $ChannelId
+            brandingSettings = @{
+                channel = @{
+                    description     = $DescCanal
+                    keywords        = '"International Superstar Soccer Deluxe" "ISS Deluxe" ISSD "Charmoso Gaucho" "Deutscher Fussball" "Campeonato Brasileiro 96" "Ronaldinho Soccer" "ISSD Extended" eFootball EAFC FIFA skimboll2001'
+                    defaultLanguage = "pt_BR"
+                    country         = "BR"
+                }
+            }
+        }
+        $BodyJson = $BodyObj | ConvertTo-Json -Depth 6 -Compress
+        $TempChFile = Join-Path $PSScriptRoot "..\.secrets\temp-channel.json"
+        [System.IO.File]::WriteAllText($TempChFile, $BodyJson, (New-Object System.Text.UTF8Encoding($false)))
+
+        $ResChFile = Join-Path $PSScriptRoot "..\.secrets\temp-channel-res.json"
+        & curl.exe -s -S -X PUT "https://www.googleapis.com/youtube/v3/channels?part=brandingSettings" `
+            -H "Authorization: Bearer $Token" `
+            -H "Content-Type: application/json; charset=UTF-8" `
+            --data-binary "@$TempChFile" `
+            -o $ResChFile
+
+        Remove-Item $TempChFile, $ResChFile -Force -ErrorAction SilentlyContinue
+        Write-Host "Descricao e palavras-chave do canal Skimboll2001 atualizadas com sucesso no YouTube!" -ForegroundColor Green
     }
 
     "AtualizarVideo" {
