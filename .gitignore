@@ -1,0 +1,24 @@
+# Cofre criptografado DPAPI, frames temporarios e credenciais locais (NUNCA versionar)
+.secrets/
+client_secret.json
+token.json
+*.token.json
+*.dpapi.xml
+.env
+.env.*
+
+# Videos de gameplay (nao enviar para o GitHub para nao ocupar espaco)
+*.mkv
+*.mp4
+*.avi
+*.mov
+*.webm
+*.flv
+videos/*
+!videos/.gitkeep
+
+# Ambientes e dependencias
+node_modules/
+.venv/
+venv/
+__pycache__/

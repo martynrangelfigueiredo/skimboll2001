@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <!-- Área de fundo (substituir pelo print real da partida no editor) -->
+  <rect width="1280" height="720" fill="#4A0707"/>
+  <text x="640" y="320" font-family="'Segoe UI', Arial, sans-serif" font-size="32" font-weight="700" fill="#FFD600" fill-opacity="0.35" text-anchor="middle">
+    [ INSERIR PRINT DA PARTIDA DE ISS DELUXE AQUI — 1280×720 ]
+  </text>
+
+  <!-- Moldura Externa Vermelha e Amarelo Ouro -->
+  <rect x="6" y="6" width="1268" height="708" fill="none" stroke="#B71C1C" stroke-width="12"/>
+  <rect x="14" y="14" width="1252" height="692" fill="none" stroke="#FFD600" stroke-width="5"/>
+
+  <!-- Selo Superior Esquerdo: Identificação da ROM / Versão do ISSD -->
+  <rect x="34" y="34" width="390" height="66" rx="8" fill="#B71C1C" stroke="#FFD600" stroke-width="4"/>
+  <polygon points="64,52 71,66 86,66 74,75 79,90 64,80 49,90 54,75 42,66 57,66" fill="#FFD600"/>
+  <text x="242" y="78" font-family="'Courier New', monospace" font-size="28" font-weight="900" fill="#FFD600" text-anchor="middle" letter-spacing="2">
+    ISS DELUXE • SNES
+  </text>
+
+  <!-- Selo Superior Direito: Assinatura do Canal -->
+  <rect x="976" y="34" width="270" height="58" rx="8" fill="#6A0B0B" stroke="#FFD600" stroke-width="3"/>
+  <text x="1111" y="72" font-family="'Russo One', 'Segoe UI', Arial, sans-serif" font-size="25" font-weight="900" fill="#FFD600" text-anchor="middle" letter-spacing="1.5">
+    SKIMBOLL<tspan fill="#FFFFFF">2001</tspan>
+  </text>
+
+  <!-- Barra Inferior estilo Placar ISS Deluxe em Vermelho Forte + Borda Dupla Amarela -->
+  <rect x="34" y="548" width="1212" height="136" rx="10" fill="#8E0E0E" fill-opacity="0.96" stroke="#FFD600" stroke-width="6"/>
+  <rect x="44" y="558" width="1192" height="116" rx="6" fill="none" stroke="#FFAB00" stroke-width="2"/>
+
+  <!-- Bloco lateral amarelo com estrela vermelha -->
+  <rect x="34" y="548" width="24" height="136" fill="#FFD600"/>
+
+  <!-- Título da Partida / Vídeo -->
+  <text x="84" y="636" font-family="'Russo One', 'Chakra Petch', 'Arial Black', sans-serif" font-size="60" font-weight="900" fill="#FFD600" letter-spacing="2">
+    URSS vs BRASIL — CLÁSSICO
+  </text>
+
+  <!-- Plaqueta Direita estilo HUD do SNES (Modo/Torneio) -->
+  <rect x="955" y="578" width="265" height="76" rx="8" fill="#6A0B0B" stroke="#FFD600" stroke-width="4"/>
+  <text x="1087" y="627" font-family="'Courier New', monospace" font-size="30" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">
+    WORLD SERIES
+  </text>
+</svg>
