@@ -1,55 +1,46 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2560 1440" width="2560" height="1440">
-  <defs>
-    <linearGradient id="redBanner" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#6A0B0B"/>
-      <stop offset="50%" stop-color="#B71C1C"/>
-      <stop offset="100%" stop-color="#6A0B0B"/>
-    </linearGradient>
-  </defs>
+  <!-- Fundo Vermelho Oficial Skimboll (#D21D1D) e faixa inferior (#B41919) -->
+  <rect width="2560" height="1440" fill="#D21D1D"/>
+  <rect x="0" y="1220" width="2560" height="220" fill="#B41919"/>
 
-  <!-- Fundo 2560x1440 todo em Vermelho Profundo -->
-  <rect width="2560" height="1440" fill="url(#redBanner)"/>
-
-  <!-- Marcação de Campo de Futebol em Amarelo Ouro ao fundo (TV) -->
-  <g stroke="#FFD600" stroke-opacity="0.22" stroke-width="6" fill="none">
-    <rect x="160" y="100" width="2240" height="1240" rx="16"/>
-    <line x1="1280" y1="100" x2="1280" y2="1340"/>
-    <circle cx="1280" cy="720" r="280"/>
-    <!-- Grandes áreas -->
-    <rect x="160" y="420" width="320" height="600"/>
-    <rect x="2080" y="420" width="320" height="600"/>
+  <!-- Linhas sutis de campo em amarelo para TV -->
+  <g stroke="#F4E600" stroke-opacity="0.18" stroke-width="5" fill="none">
+    <rect x="140" y="90" width="2280" height="1260"/>
+    <line x1="1280" y1="90" x2="1280" y2="1350"/>
+    <circle cx="1280" cy="720" r="290"/>
   </g>
 
   <!-- ÁREA SEGURA DO YOUTUBE (1546x423 centralizada: x=507, y=508) -->
-  <!-- Moldura estilo caixa de menu clássico do ISS Deluxe em Vermelho Escuro + Borda Dupla Amarelo Ouro -->
-  <rect x="507" y="508" width="1546" height="423" rx="14" fill="#7F0000" fill-opacity="0.95" stroke="#FFD600" stroke-width="8"/>
-  <rect x="523" y="524" width="1514" height="391" rx="8" fill="none" stroke="#FFAB00" stroke-width="3"/>
+  <rect x="507" y="508" width="1546" height="423" fill="#D21D1D" stroke="#F4E600" stroke-width="6"/>
+  <rect x="513" y="855" width="1534" height="70" fill="#B41919"/>
 
-  <!-- Faixas laterais amarelas internas -->
-  <rect x="535" y="536" width="18" height="367" fill="#FFD600"/>
-  <rect x="2007" y="536" width="18" height="367" fill="#FFD600"/>
+  <!-- "20" e "01" nos cantos superiores da área segura -->
+  <text x="542" y="562" font-family="'Courier New', monospace" font-size="38" font-weight="900" fill="#F4E600" letter-spacing="2">20</text>
+  <text x="2018" y="562" font-family="'Courier New', monospace" font-size="38" font-weight="900" fill="#F4E600" text-anchor="end" letter-spacing="2">01</text>
 
-  <!-- Estrelas amarelas no topo da área segura -->
-  <polygon points="1280,545 1290,573 1320,573 1296,590 1305,618 1280,601 1255,618 1264,590 1240,573 1270,573" fill="#FFD600"/>
-  <polygon points="1210,565 1216,582 1234,582 1220,592 1225,609 1210,599 1195,609 1200,592 1186,582 1204,582" fill="#FFD600"/>
-  <polygon points="1350,565 1356,582 1374,582 1360,592 1365,609 1350,599 1335,609 1340,592 1326,582 1344,582" fill="#FFD600"/>
+  <!-- Logo Oficial Triângulo Invertido + S à esquerda da área segura -->
+  <g transform="translate(650, 545)">
+    <polygon points="0,0 220,0 110,205" fill="none" stroke="#F4E600" stroke-width="15"/>
+    <text x="110" y="118" font-family="'Arial Black', Impact, sans-serif" font-size="88" font-weight="900" fill="#F4E600" text-anchor="middle">S</text>
+  </g>
 
-  <!-- Título Principal do Canal -->
-  <text x="1280" y="720" font-family="'Russo One', 'Chakra Petch', 'Arial Black', sans-serif" font-size="114" font-weight="900" fill="#FFD600" text-anchor="middle" letter-spacing="6">
-    SKIMBOLL<tspan fill="#FFFFFF">2001</tspan>
+  <!-- Nome SKIMBOLL e Lema Multilíngue à direita -->
+  <text x="1420" y="645" font-family="'Courier New', 'Arial Black', monospace" font-size="96" font-weight="900" fill="#F4E600" text-anchor="middle" letter-spacing="8">
+    SKIMBOLL
   </text>
 
-  <!-- Linha divisória em Amarelo Ouro -->
-  <line x1="760" y1="752" x2="1800" y2="752" stroke="#FFD600" stroke-width="5"/>
-
-  <!-- Subtítulo: Jogo e proposta -->
-  <text x="1280" y="808" font-family="'Segoe UI', Arial, sans-serif" font-size="34" font-weight="800" fill="#FFFFFF" text-anchor="middle" letter-spacing="4">
-    INTERNATIONAL SUPERSTAR SOCCER DELUXE &amp; VARIAÇÕES
+  <text x="1420" y="705" font-family="'Courier New', monospace" font-size="27" font-weight="900" fill="#F4E600" text-anchor="middle" letter-spacing="1.5">
+    desde 2001 • seit 2001 • since 2001 • 自 2001 年
   </text>
 
-  <!-- Plaqueta inferior estilo placar de SNES -->
-  <rect x="850" y="832" width="860" height="52" rx="6" fill="#B71C1C" stroke="#FFD600" stroke-width="3"/>
-  <text x="1280" y="867" font-family="'Courier New', monospace" font-size="26" font-weight="900" fill="#FFD600" text-anchor="middle" letter-spacing="4">
-    ★ SNES 16-BIT • SÓBRIO &amp; DIVERTIDO • PARA TODOS ★
+  <!-- Jogos do Canal -->
+  <rect x="940" y="740" width="960" height="58" fill="#B41919" stroke="#F4E600" stroke-width="3"/>
+  <text x="1420" y="779" font-family="'Courier New', monospace" font-size="28" font-weight="900" fill="#F4E600" text-anchor="middle" letter-spacing="2">
+    ISS DELUXE (SNES) • eFOOTBALL • EA SPORTS FC • FIFA
+  </text>
+
+  <!-- Rodapé da Área Segura -->
+  <text x="1280" y="901" font-family="'Courier New', monospace" font-size="25" font-weight="900" fill="#F4E600" text-anchor="middle" letter-spacing="3">
+    GAMEPLAYS &amp; TORNEIOS • SÓBRIO E SEM FRUFRU • PARA TODAS AS IDADES
   </text>
 </svg>

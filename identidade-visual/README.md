@@ -1,42 +1,42 @@
-# Identidade Visual — Canal **skimboll2001**
+# Identidade Visual Oficial — Canal **skimboll2001**
 
-> **Foco do Canal:** Gameplays de *International Superstar Soccer Deluxe* (SNES) e suas variações/hacks clássicos.
-> **Conceito Estético:** Predominância forte de **Vermelho** com detalhes em **Amarelo Ouro** (inspirado na estética sóbria e marcante das bandeiras/uniformes da China e URSS), combinado com elementos clássicos do **ISS Deluxe** (placares 16-bit, setas de condição/moral dos jogadores, linhas de campo e caixas de menu do SNES).
-> **Tom e Personalidade:** Sóbrio, direto ao ponto, divertido, sem frufru e para todas as idades e gêneros.
-
----
-
-## 📁 Estrutura de Pastas
-
-- **`01-logos-e-avatar/`** — Avatar do canal (`800×800 px`) com fundo vermelho imperial/soviético, detalhes em amarelo ouro, estrela/emblema esportivo e referência 16-bit ao ISS Deluxe.
-- **`02-banners-youtube/`** — Arte do canal (`2560×1440 px`, com área segura central de `1546×423 px`) em vermelho intenso, moldura dupla amarelo ouro e elementos de campo/placar do ISSD.
-- **`03-thumbnails-templates/`** — Moldura limpa (`1280×720 px`) em vermelho e amarelo ouro, com caixa de placar inspirada na interface da Konami no SNES.
-- **`04-paleta-e-fontes/`** — Especificações técnicas das cores (Vermelhos e Amarelos) e tipografia.
-- **`05-intros-outros-overlays/`** — Moldura (Bezel) `1920×1080 px` com janela central `1440×1080 px` (proporção 4:3 original do SNES) e laterais em vermelho escuro com detalhes amarelos.
+> **Logo Oficial:** Fundo vermelho vivo (`#D21D1D`) com barra inferior (`#B41919`), moldura amarela (`#F4E600`) com **`20`** e **`01`** nos cantos superiores, **Triângulo Invertido (`▽`) com `S` no centro**, título **`SKIMBOLL`** e assinatura multilíngue:
+> - *Skimboll desde 2001*
+> - *Skimboll seit 2001*
+> - *Skimboll since 2001*
+> - *Skimboll 自 2001 年*
 
 ---
 
-## 🎨 Paleta de Cores ("Vermelho & Ouro • ISS Deluxe")
+## 🎮 Jogos e Modelos do Canal
 
-Forte, sóbria, de alto contraste e imediatamente reconhecível:
+A identidade visual e o gerador automático de thumbnails (`scripts/youtube.ps1`) estão preparados para os **4 universos de futebol** do canal:
 
-| Papel | Nome | Hex | Uso Principal |
-| :--- | :--- | :--- | :--- |
-| **Cor Principal** | Vermelho Bandeira / Carmesim | `#B71C1C` | Cor dominante de fundos, faixas principais e blocos de identidade |
-| **Fundo Escuro / Sombra** | Vermelho Bordô Profundo | `#6A0B0B` | Gradientes, bordas laterais do overlay 4:3 (para não cansar a vista) e fundos de caixas |
-| **Vermelho Vivo (Acento)** | Vermelho Estrela | `#D32F2F` | Realces internos, barras de título e cabeçalhos estilo menu do ISSD |
-| **Destaque Principal** | Amarelo Ouro (China/URSS) | `#FFD600` | Textos de destaque (`2001`), bordas duplas, estrelas, linhas do campo e placar |
-| **Destaque Secundário** | Ouro Envelhecido / Âmbar | `#FFAB00` | Sombras de texto retrô, setas de moral do ISSD e divisórias |
-| **Contraste Neutro** | Branco Puro | `#FFFFFF` | Textos de leitura rápida quando sobrepostos ao vermelho escuro |
-| **Caixa Placar ISSD** | Preto Grafite 16-bit | `#141414` | Fundo interno de placares/caixas de informação estilo HUD do SNES |
+1. **`ISSD` (*International Superstar Soccer Deluxe* • SNES):**
+   - Inspirado no estilo da comunidade competitiva e de ROM hacks (**`ninjaissd`**, **`Angelo Salles` / *International Cup Deluxe Tournaments***, *Club World Cup Deluxe*).
+   - **Layout da Thumbnail:** Exibe o **lance real da partida em campo** à esquerda (com escalonamento *NearestNeighbor Pixel-Perfect* sem borrar e sem tampar as bandeiras superiores do jogo), a **Logo Oficial Skimboll** no topo direito, o **Placar Final In-Game real** logo abaixo à direita e a **Barra de Torneio** na base com `▽S` + `<TIME 1> [ PLACAR ] <TIME 2>`.
+2. **`eFootball` (*Konami eFootball*):**
+   - Selo em Azul & Amarelo (`#0038A8` / `#F4E600`), suporte a capturas Full HD 16:9 + placar final e barra oficial do canal.
+3. **`EAFC` (*EA Sports FC 24 / 25 / 26*):**
+   - Selo em Grafite Escuro & Verde Neon (`#12161C` / `#00FF87`), suporte a capturas Full HD + barra oficial do canal.
+4. **`FIFA` (*EA Sports FIFA Clássico & Moderno*):**
+   - Selo em Azul Royal & Ouro (`#122A5E` / `#F4E600`), suporte a capturas Full HD + barra oficial do canal.
 
 ---
 
-## 🕹️ Elementos Visuais de *ISS Deluxe* Integrados
+## 📁 Arquivos na Pasta `identidade-visual/`
 
-1. **Caixas com Borda Dupla Amarela:** Inspiradas nas janelas clássicas de seleção de time e formação do *ISS Deluxe*.
-2. **Setinhas de Condição (Moral do Jogador):** Referência sutil ao ícone clássico de carinha/seta para cima (amarela/laranja) do menu de escalação do ISSD.
-3. **Linhas de Campo em Amarelo Ouro sobre Fundo Vermelho:** Substitui o verde comum por linhas de gramado douradas sobre o fundo vermelho.
-4. **Tipografia Esportiva & 16-Bit:**
-   - **Títulos:** `Chakra Petch` (Bold) ou `Russo One` / `Barlow Condensed` (visual forte, bloco sólido e sóbrio).
-   - **Placares e Tags de ROM:** `Press Start 2P` ou `Courier New` (Bold).
+- **`01-logos-e-avatar/`**
+  - [logo-oficial-skimboll2001.png](file:///c:/Users/marty/skimboll2001/identidade-visual/01-logos-e-avatar/logo-oficial-skimboll2001.png) — Imagem original oficial da logo.
+  - [avatar-skimboll2001.svg](file:///c:/Users/marty/skimboll2001/identidade-visual/01-logos-e-avatar/avatar-skimboll2001.svg) — Versão vetorial `800×800` fiel à logo oficial.
+- **`02-banners-youtube/`**
+  - [banner-youtube-2560x1440.svg](file:///c:/Users/marty/skimboll2001/identidade-visual/02-banners-youtube/banner-youtube-2560x1440.svg) — Banner `2560×1440` com a logo oficial e todos os jogos do canal (*ISS Deluxe • eFootball • EA Sports FC • FIFA*).
+- **`03-thumbnails-templates/`**
+  - [modelo-thumb-ISSD.png](file:///c:/Users/marty/skimboll2001/identidade-visual/03-thumbnails-templates/modelo-thumb-ISSD.png) — Modelo real com gameplay + placar in-game de *ISS Deluxe*.
+  - [modelo-thumb-eFootball.png](file:///c:/Users/marty/skimboll2001/identidade-visual/03-thumbnails-templates/modelo-thumb-eFootball.png) — Modelo preparado para *eFootball*.
+  - [modelo-thumb-EAFC.png](file:///c:/Users/marty/skimboll2001/identidade-visual/03-thumbnails-templates/modelo-thumb-EAFC.png) — Modelo preparado para *EA Sports FC*.
+  - [modelo-thumb-FIFA.png](file:///c:/Users/marty/skimboll2001/identidade-visual/03-thumbnails-templates/modelo-thumb-FIFA.png) — Modelo preparado para *FIFA*.
+- **`04-paleta-e-fontes/`**
+  - [paleta-e-especificacoes.json](file:///c:/Users/marty/skimboll2001/identidade-visual/04-paleta-e-fontes/paleta-e-especificacoes.json) — Cores oficiais e presets por jogo.
+- **`05-intros-outros-overlays/`**
+  - [overlay-gameplay-4x3-1920x1080.svg](file:///c:/Users/marty/skimboll2001/identidade-visual/05-intros-outros-overlays/overlay-gameplay-4x3-1920x1080.svg) — Bezel `1920×1080` com a logo oficial nas laterais para gravações 4:3 de SNES.

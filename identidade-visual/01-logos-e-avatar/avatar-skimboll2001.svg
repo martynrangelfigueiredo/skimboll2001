@@ -1,54 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
-  <defs>
-    <!-- Gradiente Vermelho Profundo (inspirado em bandeiras clássicas China/URSS) -->
-    <radialGradient id="redBg" cx="50%" cy="45%" r="65%">
-      <stop offset="0%" stop-color="#D32F2F"/>
-      <stop offset="65%" stop-color="#B71C1C"/>
-      <stop offset="100%" stop-color="#6A0B0B"/>
-    </radialGradient>
-  </defs>
+  <!-- Fundo Vermelho Oficial Skimboll (#D21D1D) e barra inferior (#B41919) -->
+  <rect width="800" height="800" fill="#D21D1D"/>
+  <rect x="0" y="690" width="800" height="110" fill="#B41919"/>
 
-  <!-- Fundo Vermelho Principal -->
-  <rect width="800" height="800" rx="110" fill="url(#redBg)"/>
+  <!-- Moldura Amarela Oficial com 20 e 01 nos cantos superiores -->
+  <rect x="36" y="36" width="728" height="728" fill="none" stroke="#F4E600" stroke-width="6"/>
+  <line x1="36" y1="36" x2="36" y2="764" stroke="#F4E600" stroke-width="10"/>
+  <line x1="36" y1="36" x2="764" y2="36" stroke="#F4E600" stroke-width="10"/>
 
-  <!-- Borda dupla externa em Amarelo Ouro -->
-  <rect x="28" y="28" width="744" height="744" rx="90" fill="none" stroke="#FFD600" stroke-width="10"/>
-  <rect x="46" y="46" width="708" height="708" rx="78" fill="none" stroke="#FFAB00" stroke-width="3" stroke-opacity="0.7"/>
+  <!-- Cantos "20" e "01" -->
+  <text x="68" y="96" font-family="'Courier New', monospace" font-size="38" font-weight="900" fill="#F4E600" letter-spacing="2">20</text>
+  <text x="732" y="96" font-family="'Courier New', monospace" font-size="38" font-weight="900" fill="#F4E600" text-anchor="end" letter-spacing="2">01</text>
 
-  <!-- Linhas de campo de futebol em Amarelo Ouro no fundo -->
-  <circle cx="400" cy="400" r="285" fill="none" stroke="#FFD600" stroke-width="6" stroke-opacity="0.35"/>
-  <line x1="60" y1="400" x2="740" y2="400" stroke="#FFD600" stroke-width="5" stroke-opacity="0.35"/>
-  <circle cx="400" cy="400" r="16" fill="#FFD600" fill-opacity="0.4"/>
-
-  <!-- Estrela superior em Amarelo Ouro + 4 estrelas menores em arco (referência visual China/URSS + Campeão) -->
-  <polygon points="400,95 414,135 456,135 422,160 435,200 400,175 365,200 378,160 344,135 386,135" fill="#FFD600"/>
-  <circle cx="310" cy="165" r="8" fill="#FFD600"/>
-  <circle cx="345" cy="135" r="8" fill="#FFD600"/>
-  <circle cx="455" cy="135" r="8" fill="#FFD600"/>
-  <circle cx="490" cy="165" r="8" fill="#FFD600"/>
-
-  <!-- Caixa Central estilo Menu do ISS Deluxe (borda chanfrada amarela e fundo vermelho escuro) -->
-  <rect x="95" y="280" width="610" height="230" rx="14" fill="#6A0B0B" stroke="#FFD600" stroke-width="8"/>
-  <rect x="109" y="294" width="582" height="202" rx="8" fill="none" stroke="#FFAB00" stroke-width="2"/>
+  <!-- Triângulo Invertido Oficial com "S" central -->
+  <polygon points="265,68 535,68 400,322" fill="none" stroke="#F4E600" stroke-width="18" stroke-linejoin="miter"/>
+  <text x="400" y="212" font-family="'Arial Black', Impact, sans-serif" font-size="112" font-weight="900" fill="#F4E600" text-anchor="middle">S</text>
 
   <!-- Nome Principal: SKIMBOLL -->
-  <text x="400" y="388" font-family="'Russo One', 'Chakra Petch', 'Arial Black', sans-serif" font-size="84" font-weight="900" fill="#FFD600" text-anchor="middle" letter-spacing="4">
+  <text x="400" y="445" font-family="'Courier New', 'Arial Black', monospace" font-size="86" font-weight="900" fill="#F4E600" text-anchor="middle" letter-spacing="6">
     SKIMBOLL
   </text>
 
-  <!-- Faixa interna estilo Placar ISSD para o "2001" -->
-  <rect x="255" y="412" width="290" height="64" rx="6" fill="#B71C1C" stroke="#FFD600" stroke-width="4"/>
-  <!-- Seta de moral máxima do ISSD (para cima) à esquerda e à direita -->
-  <polygon points="285,430 300,450 291,450 291,462 279,462 279,450 270,450" fill="#FFD600"/>
-  <polygon points="515,430 530,450 521,450 521,462 509,462 509,450 500,450" fill="#FFD600"/>
-
-  <text x="400" y="458" font-family="'Courier New', monospace" font-size="46" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="8">
-    2001
-  </text>
-
-  <!-- Rodapé estilo HUD 16-bit do ISS Deluxe -->
-  <rect x="190" y="565" width="420" height="54" rx="8" fill="#6A0B0B" stroke="#FFD600" stroke-width="3"/>
-  <text x="400" y="601" font-family="'Courier New', monospace" font-size="28" font-weight="800" fill="#FFD600" text-anchor="middle" letter-spacing="4">
-    ★ ISS DELUXE • SNES ★
-  </text>
+  <!-- 4 Linhas Multilíngues Oficiais -->
+  <g font-family="'Courier New', monospace" font-size="33" font-weight="900" fill="#F4E600" text-anchor="middle" letter-spacing="1.5">
+    <text x="400" y="545">Skimboll desde 2001</text>
+    <text x="400" y="598">Skimboll seit 2001</text>
+    <text x="400" y="651">Skimboll since 2001</text>
+    <text x="400" y="718">Skimboll 自 2001 年</text>
+  </g>
 </svg>

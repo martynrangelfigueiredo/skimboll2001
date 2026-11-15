@@ -1,73 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
   <!--
-    Moldura (Bezel/Overlay) 1920x1080 para vídeos 16:9 com janela central 4:3 (1440x1080)
-    Tema: Vermelho Profundo & Amarelo Ouro (China/URSS) + HUD International Superstar Soccer Deluxe
+    Moldura (Bezel/Overlay) 1920x1080 para vídeos 4:3 de SNES (janela central 1440x1080 transparente)
+    Baseado na Logo Oficial SKIMBOLL (20 ▽S 01, Vermelho #D21D1D e Amarelo #F4E600)
   -->
-  <defs>
-    <linearGradient id="sideRed" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#6A0B0B"/>
-      <stop offset="50%" stop-color="#8E0E0E"/>
-      <stop offset="100%" stop-color="#520606"/>
-    </linearGradient>
-  </defs>
 
   <!-- ==================== BARRA LATERAL ESQUERDA (240x1080) ==================== -->
-  <rect x="0" y="0" width="240" height="1080" fill="url(#sideRed)"/>
-  <!-- Borda dupla Amarelo Ouro separando a tela 4:3 do SNES -->
-  <line x1="236" y1="0" x2="236" y2="1080" stroke="#FFD600" stroke-width="6"/>
-  <line x1="228" y1="0" x2="228" y2="1080" stroke="#FFAB00" stroke-width="2"/>
+  <rect x="0" y="0" width="240" height="1080" fill="#D21D1D"/>
+  <rect x="0" y="940" width="240" height="140" fill="#B41919"/>
+  <rect x="10" y="12" width="220" height="1056" fill="none" stroke="#F4E600" stroke-width="4"/>
+  <line x1="238" y1="0" x2="238" y2="1080" stroke="#F4E600" stroke-width="6"/>
 
-  <!-- Caixa do Canal no topo esquerdo (estilo menu ISS Deluxe) -->
-  <rect x="16" y="32" width="198" height="110" rx="8" fill="#6A0B0B" stroke="#FFD600" stroke-width="4"/>
-  <polygon points="115,44 120,58 135,58 123,66 127,80 115,72 103,80 107,66 95,58 110,58" fill="#FFD600"/>
-  <text x="115" y="105" font-family="'Russo One', 'Segoe UI', Arial, sans-serif" font-size="22" font-weight="900" fill="#FFD600" text-anchor="middle" letter-spacing="1.5">
-    SKIMBOLL
-  </text>
-  <text x="115" y="130" font-family="'Courier New', monospace" font-size="22" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="4">
-    2001
-  </text>
+  <!-- 20 e 01 no topo -->
+  <text x="24" y="46" font-family="'Courier New', monospace" font-size="22" font-weight="900" fill="#F4E600">20</text>
+  <text x="216" y="46" font-family="'Courier New', monospace" font-size="22" font-weight="900" fill="#F4E600" text-anchor="end">01</text>
 
-  <!-- Desenho sutil de meio-campo em amarelo ouro no centro esquerdo -->
-  <g stroke="#FFD600" stroke-opacity="0.3" stroke-width="3" fill="none">
-    <line x1="20" y1="540" x2="210" y2="540"/>
-    <circle cx="115" cy="540" r="42"/>
+  <!-- Triângulo Invertido Oficial + S -->
+  <polygon points="55,60 185,60 120,180" fill="none" stroke="#F4E600" stroke-width="10"/>
+  <text x="120" y="132" font-family="'Arial Black', sans-serif" font-size="52" font-weight="900" fill="#F4E600" text-anchor="middle">S</text>
+
+  <text x="120" y="228" font-family="'Courier New', monospace" font-size="32" font-weight="900" fill="#F4E600" text-anchor="middle" letter-spacing="2">SKIMBOLL</text>
+
+  <g font-family="'Courier New', monospace" font-size="15" font-weight="900" fill="#F4E600" text-anchor="middle">
+    <text x="120" y="275">Skimboll desde 2001</text>
+    <text x="120" y="302">Skimboll seit 2001</text>
+    <text x="120" y="329">Skimboll since 2001</text>
+    <text x="120" y="360">Skimboll 自 2001 年</text>
   </g>
-
-  <!-- Rodapé esquerdo: Controle 1P -->
-  <rect x="28" y="990" width="174" height="54" rx="6" fill="#6A0B0B" stroke="#FFD600" stroke-width="3"/>
-  <text x="115" y="1025" font-family="'Courier New', monospace" font-size="22" font-weight="900" fill="#FFD600" text-anchor="middle" letter-spacing="2">
-    ★ 1P • SNES ★
-  </text>
 
   <!-- ==================== BARRA LATERAL DIREITA (240x1080) ==================== -->
-  <rect x="1680" y="0" width="240" height="1080" fill="url(#sideRed)"/>
-  <!-- Borda dupla Amarelo Ouro separando a tela 4:3 do SNES -->
-  <line x1="1684" y1="0" x2="1684" y2="1080" stroke="#FFD600" stroke-width="6"/>
-  <line x1="1692" y1="0" x2="1692" y2="1080" stroke="#FFAB00" stroke-width="2"/>
+  <rect x="1680" y="0" width="240" height="1080" fill="#D21D1D"/>
+  <rect x="1680" y="940" width="240" height="140" fill="#B41919"/>
+  <rect x="1690" y="12" width="220" height="1056" fill="none" stroke="#F4E600" stroke-width="4"/>
+  <line x1="1682" y1="0" x2="1682" y2="1080" stroke="#F4E600" stroke-width="6"/>
 
   <!-- Caixa da Versão/ROM no topo direito -->
-  <rect x="1706" y="32" width="198" height="110" rx="8" fill="#6A0B0B" stroke="#FFD600" stroke-width="4"/>
-  <text x="1805" y="66" font-family="'Courier New', monospace" font-size="17" font-weight="900" fill="#FFD600" text-anchor="middle" letter-spacing="1.5">
-    VERSÃO / ROM
-  </text>
-  <line x1="1726" y1="78" x2="1884" y2="78" stroke="#FFD600" stroke-width="2"/>
-  <text x="1805" y="108" font-family="'Segoe UI', Arial, sans-serif" font-size="21" font-weight="900" fill="#FFFFFF" text-anchor="middle">
-    ISS DELUXE
-  </text>
-  <text x="1805" y="130" font-family="'Courier New', monospace" font-size="15" font-weight="700" fill="#FFD600" text-anchor="middle">
-    KONAMI • 1995
-  </text>
-
-  <!-- Indicador de Moral Máxima do ISSD no centro direito -->
-  <g transform="translate(1755, 505)">
-    <rect x="0" y="0" width="100" height="70" rx="8" fill="#6A0B0B" stroke="#FFD600" stroke-width="3"/>
-    <!-- Seta clássica para cima de condição máxima -->
-    <polygon points="50,14 72,38 58,38 58,56 42,56 42,38 28,38" fill="#FFD600"/>
-  </g>
+  <text x="1800" y="70" font-family="'Courier New', monospace" font-size="22" font-weight="900" fill="#F4E600" text-anchor="middle">ISS DELUXE</text>
+  <line x1="1715" y1="88" x2="1885" y2="88" stroke="#F4E600" stroke-width="3"/>
+  <text x="1800" y="122" font-family="'Courier New', monospace" font-size="18" font-weight="900" fill="#F4E600" text-anchor="middle">SNES • 16-BIT</text>
 
   <!-- Rodapé direito -->
-  <rect x="1718" y="990" width="174" height="54" rx="6" fill="#6A0B0B" stroke="#FFD600" stroke-width="3"/>
-  <text x="1805" y="1025" font-family="'Courier New', monospace" font-size="20" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="2">
-    4:3 ORIGINAL
+  <text x="1800" y="1015" font-family="'Courier New', monospace" font-size="20" font-weight="900" fill="#F4E600" text-anchor="middle" letter-spacing="1.5">
+    @SKIMBOLL2001
   </text>
 </svg>

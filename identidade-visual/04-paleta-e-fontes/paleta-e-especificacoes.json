@@ -1,32 +1,30 @@
 {
   "canal": "skimboll2001",
-  "jogo_base": "International Superstar Soccer Deluxe (SNES) & Variações",
-  "referencia_visual": "Vermelho predominante com detalhes em Amarelo Ouro (estilo China/URSS) + HUD 16-bit do ISS Deluxe",
-  "estilo": "Sóbrio, divertido, sem frufru, para todas as idades e gêneros",
-  "cores": {
-    "vermelho_principal_bandeira": "#B71C1C",
-    "vermelho_vivo_estrela": "#D32F2F",
-    "vermelho_bordo_profundo": "#6A0B0B",
-    "amarelo_ouro_principal": "#FFD600",
-    "amarelo_ambar_secundario": "#FFAB00",
-    "branco_contraste": "#FFFFFF",
-    "preto_hud_16bit": "#141414"
-  },
-  "elementos_iss_deluxe": [
-    "Caixas com borda dupla amarelo ouro sobre fundo vermelho escuro (estilo seleção de time Konami)",
-    "Setas de condição/moral máxima para cima em amarelo/laranja",
-    "Marcação de linhas de campo em amarelo ouro sobre fundo carmesim",
-    "Estrelas douradas de campeão/seleção"
+  "lemas_oficiais": [
+    "Skimboll desde 2001",
+    "Skimboll seit 2001",
+    "Skimboll since 2001",
+    "Skimboll 自 2001 年"
   ],
-  "fontes_sugeridas": {
-    "titulos_e_thumbnails": "Russo One / Chakra Petch / Barlow Condensed (Bold)",
-    "placares_e_tags_retro": "Press Start 2P / VT323 / Courier New",
-    "textos_apoio": "Inter / Roboto"
+  "simbolo_oficial": "Triângulo invertido amarelo (▽) com 'S' centralizado e '20' / '01' nos cantos superiores sobre fundo vermelho (#D21D1D)",
+  "jogos_suportados": [
+    "ISSD — International Superstar Soccer Deluxe (SNES, NINJAISSD, Angelo Salles International Cup Deluxe Tournaments, Club World Cup Deluxe)",
+    "eFootball — Konami eFootball (Matchplay, Dream Team & Tournaments)",
+    "EAFC — EA Sports FC (EA FC 24, 25, 26, Tournaments & Ultimate Team)",
+    "FIFA — EA Sports FIFA (Edições Clássicas e Modernas)"
+  ],
+  "cores_oficiais_logo": {
+    "vermelho_skimboll_principal": "#D21D1D",
+    "vermelho_skimboll_rodape": "#B41919",
+    "vermelho_sombra_fundo": "#8C0E0E",
+    "amarelo_skimboll_oficial": "#F4E600",
+    "preto_placar": "#0E0E12",
+    "branco_times": "#FFFFFF"
   },
-  "dimensoes_padrao": {
-    "avatar_youtube": "800x800",
-    "banner_youtube": "2560x1440 (área segura: 1546x423)",
-    "thumbnail": "1280x720",
-    "video_gameplay_full_hd": "1920x1080 (janela 4:3 do SNES: 1440x1080 centralizada)"
+  "cores_badges_jogos": {
+    "ISSD": { "fundo": "#D21D1D", "destaque": "#F4E600" },
+    "eFootball": { "fundo": "#0038A8", "destaque": "#F4E600" },
+    "EAFC": { "fundo": "#12161C", "destaque": "#00FF87" },
+    "FIFA": { "fundo": "#122A5E", "destaque": "#F4E600" }
   }
 }
