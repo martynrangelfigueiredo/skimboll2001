@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
   <!--
-    Moldura (Bezel/Overlay) 1920x1080 para vídeos 4:3 de SNES (janela central 1440x1080 transparente)
+    Moldura (Bezel/Overlay) 1920x1080 para vídeos 4:3 (janela central 1440x1080 transparente)
     Baseado na Logo Oficial SKIMBOLL (20 ▽S 01, Vermelho #D21D1D e Amarelo #F4E600)
   -->
 
@@ -36,7 +36,7 @@
   <!-- Caixa da Versão/ROM no topo direito -->
   <text x="1800" y="70" font-family="'Courier New', monospace" font-size="22" font-weight="900" fill="#F4E600" text-anchor="middle">ISS DELUXE</text>
   <line x1="1715" y1="88" x2="1885" y2="88" stroke="#F4E600" stroke-width="3"/>
-  <text x="1800" y="122" font-family="'Courier New', monospace" font-size="18" font-weight="900" fill="#F4E600" text-anchor="middle">SNES • 16-BIT</text>
+  <text x="1800" y="122" font-family="'Courier New', monospace" font-size="18" font-weight="900" fill="#F4E600" text-anchor="middle">16-BIT • 4:3</text>
 
   <!-- Rodapé direito -->
   <text x="1800" y="1015" font-family="'Courier New', monospace" font-size="20" font-weight="900" fill="#F4E600" text-anchor="middle" letter-spacing="1.5">

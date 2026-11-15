@@ -1,45 +1,41 @@
 # 🚩▽S skimboll2001 — Repositório Oficial do Canal
 
-Repositório de automação, identidade visual e publicação de vídeos via YouTube Data API v3 do canal **[Skimboll2001](https://www.youtube.com/@skimboll2001)** (`UCR1UuLEs-n55oz85e7Lc5gg`).
+Repositório de automação, identidade visual, **AI Skills** e publicação de vídeos via YouTube Data API v3 do canal **[Skimboll2001](https://www.youtube.com/@skimboll2001)** (`UCR1UuLEs-n55oz85e7Lc5gg`).
 
 - **Lema Oficial:** *Skimboll desde 2001 • Skimboll seit 2001 • Skimboll since 2001 • Skimboll 自 2001 年*
-- **Jogos do Canal:**
-  1. **`ISSD`** — *International Superstar Soccer Deluxe* (SNES) & Hacks/Torneios (*NINJAISSD*, *Angelo Salles International Cup Deluxe Tournaments*, *Club World Cup Deluxe*, *Ronaldinho Soccer 97*, *Campeonato Brasileiro 96*).
-  2. **`eFootball`** — Konami *eFootball* (Partidas, Torneios e Dream Team).
-  3. **`EAFC`** — *EA Sports FC* (EA FC 24, 25, 26, Torneios e Ultimate Team).
-  4. **`FIFA`** — Edições clássicas e modernas de *FIFA*.
+- **Restrição Importante:** Nenhuma arte, título, descrição ou tag deve referenciar *Nintendo* ou *Konami*.
 
 ---
 
-## 🖼️ Como Funcionam as Novas Thumbnails Automáticas (`1280×720` PNG)
+## 🤖 Otimizado para Agentes de IA (`AGENTS.md` & `.agents/skills/`)
 
-Inspiradas no estilo de canais de torneios de ISSD (**`ninjaissd`** e **`Angelo Salles` / *International Cup Deluxe Tournaments***):
-
-1. **Lado Esquerdo (`804×546`):** Exibe a **imagem real da partida em campo** extraída do vídeo (com filtro *NearestNeighbor Pixel-Perfect* no SNES para manter os pixels nítidos e **sem tampar as bandeiras superiores do jogo**).
-2. **Topo Direito (`432×178`):** Exibe a **Logo Oficial do Canal (`logo-oficial-skimboll2001.png` — `20 ▽S 01 SKIMBOLL`)**.
-3. **Centro-Direito (`432×314`):** Exibe o **Placar Final In-Game real** extraído dos últimos segundos do vídeo (mostrando bandeiras, estatísticas de chutes/faltas e autores dos gols).
-4. **Barra Inferior de Torneio (`1256×148`):** Emblema `▽S` + **`<TIME 1>  [ GOLS 1 x GOLS 2 ]  <TIME 2>`** + Subtítulo do jogo/torneio.
+Qualquer agente de IA que abrir este repositório encontrará instruções estruturadas automaticamente:
+- **[AGENTS.md](file:///c:/Users/marty/skimboll2001/AGENTS.md):** Regras globais sempre ativas (restrições de marca, catálogo de ROMHACKs e fluxo de commit/push).
+- **Skill [publicar-video-youtube](file:///c:/Users/marty/skimboll2001/.agents/skills/publicar-video-youtube/SKILL.md):** Passo a passo para extrair os últimos segundos do vídeo via `ffmpeg`, ler o placar final na imagem, identificar a ROMHACK e publicar na API.
+  - Inclui o [Catálogo Completo de Jogos e ROMHACKs](file:///c:/Users/marty/skimboll2001/.agents/skills/publicar-video-youtube/references/catalogo-jogos-e-roms.md).
+- **Skill [identidade-visual-skimboll](file:///c:/Users/marty/skimboll2001/.agents/skills/identidade-visual-skimboll/SKILL.md):** Especificações da Logo Oficial (`20 ▽S 01 SKIMBOLL`) e do gerador de thumbnails (`1280×720`).
 
 ---
 
-## 📁 Estrutura do Projeto
+## 🎮 Catálogo de Jogos e ROMHACKs Suportados
 
-```text
-skimboll2001/
-├── videos/                              # Coloque os vídeos (.mkv / .mp4) aqui (ignorados no Git)
-├── identidade-visual/                   # Identidade visual completa baseada na Logo Oficial
-│   ├── 01-logos-e-avatar/               # logo-oficial-skimboll2001.png + avatar-skimboll2001.svg
-│   ├── 02-banners-youtube/              # Banner 2560x1440 com área segura 1546x423 (SVG)
-│   ├── 03-thumbnails-templates/         # Modelos prontos: ISSD, eFootball, EAFC e FIFA (PNG)
-│   ├── 04-paleta-e-fontes/              # Paleta oficial (#D21D1D / #F4E600) e presets por jogo
-│   ├── 05-intros-outros-overlays/       # Bezel 1920x1080 para tela 4:3 do SNES com a logo oficial
-│   └── README.md                        # Guia detalhado da identidade visual
-├── scripts/
-│   └── youtube.ps1                      # Automação multi-jogos (ISSD, eFootball, EAFC, FIFA)
-├── .secrets/                            # Cofre criptografado DPAPI e frames temporários (NUNCA versionado)
-├── descricao-video.txt                  # Última descrição SEO gerada automaticamente
-└── README.md                            # Este guia geral de uso e comandos
-```
+### Linha ISSD (*International Superstar Soccer Deluxe* & ROMHACKs)
+- **`ISSD`** — *International Superstar Soccer Deluxe* (normal)
+- **`ISSD Charmoso Gauchão - ANO`** — Campeonato Gaúcho ROMHACK
+- **`ISSD Deutscher Fussball - ANO`** — Campeonato Alemão ROMHACK
+- **`ISSD Champions League - ANO`** — Champions League ROMHACK
+- **`ISSD Mundial de Clubes - ANO`** — Mundial de Clubes ROMHACK
+- **`ISSD Campeonato Brasileiro 95, 96, 97, 98, 99`**
+- **`ISSD Futebol Brasileiro 95, 96, 97, 98, 99`**
+- **`ISSD Ronaldinho Soccer - ANO`**
+- **`ISSD Extended Brasil Popular - ANO`** — Campeonato Brasileiro com muitos times ROMHACK
+- **`ISSD Extended`** — Jogo normal com mais seleções atualizadas
+- **`ISSD Extended - ANO`** — Jogo extended com as escalações atualizadas do ano
+
+### Outros Jogos de Futebol
+- **`eFootball`**
+- **`EAFC`** (*EA Sports FC*)
+- **`FIFA`**
 
 ---
 
@@ -50,39 +46,43 @@ skimboll2001/
 powershell -ExecutionPolicy Bypass -File .\scripts\youtube.ps1 -Acao ExtrairFrames
 ```
 
-### 2. Postar um vídeo (ISSD, eFootball, EAFC ou FIFA)
-*(Se `-Jogo` não for informado, o script detecta pelo nome do arquivo ou usa `ISSD` como padrão)*
+### 2. Postar um vídeo (qualquer variação de ISSD, ROMHACK, eFootball, EAFC ou FIFA)
 ```powershell
-# Exemplo ISS Deluxe (SNES):
+# Exemplo ISSD Normal:
 powershell -ExecutionPolicy Bypass -File .\scripts\youtube.ps1 `
   -Acao PostarVideo `
   -Jogo "ISSD" `
   -Time1 "Alemanha" -Time2 "Japão" -Gols1 3 -Gols2 0 `
   -ModoJogo "International Cup Deluxe"
 
-# Exemplo eFootball:
+# Exemplo ISSD Charmoso Gauchão (com Ano):
 powershell -ExecutionPolicy Bypass -File .\scripts\youtube.ps1 `
   -Acao PostarVideo `
-  -Jogo "eFootball" `
-  -Time1 "Brasil" -Time2 "Argentina" -Gols1 2 -Gols2 1 `
-  -ModoJogo "eFootball International Cup"
+  -Jogo "ISSD Charmoso Gauchão" -Ano "2025" `
+  -Time1 "Grêmio" -Time2 "Internacional" -Gols1 2 -Gols2 1 `
+  -ModoJogo "Campeonato Gaúcho"
 
-# Exemplo EA Sports FC (EAFC):
+# Exemplo ISSD Campeonato Brasileiro (95 a 99):
 powershell -ExecutionPolicy Bypass -File .\scripts\youtube.ps1 `
   -Acao PostarVideo `
-  -Jogo "EAFC" `
-  -Time1 "Real Madrid" -Time2 "Bayern" -Gols1 3 -Gols2 2 `
-  -ModoJogo "Champions League"
+  -Jogo "ISSD Campeonato Brasileiro" -Ano "96" `
+  -Time1 "Palmeiras" -Time2 "Corinthians" -Gols1 3 -Gols2 1 `
+  -ModoJogo "Brasileirão 96"
 
-# Exemplo FIFA:
+# Exemplo ISSD Extended / Brasil Popular:
 powershell -ExecutionPolicy Bypass -File .\scripts\youtube.ps1 `
   -Acao PostarVideo `
-  -Jogo "FIFA" `
-  -Time1 "França" -Time2 "Itália" -Gols1 1 -Gols2 0 `
-  -ModoJogo "World Cup"
+  -Jogo "ISSD Extended Brasil Popular" -Ano "2025" `
+  -Time1 "Flamengo" -Time2 "Vasco" -Gols1 2 -Gols2 2
+
+# Exemplo eFootball / EAFC / FIFA:
+powershell -ExecutionPolicy Bypass -File .\scripts\youtube.ps1 `
+  -Acao PostarVideo `
+  -Jogo "EAFC" -Ano "25" `
+  -Time1 "Real Madrid" -Time2 "Bayern" -Gols1 3 -Gols2 2
 ```
 
-### 3. Atualizar vídeo já publicado no YouTube (Título, SEO, Hashtags e Thumbnail)
+### 3. Atualizar vídeo já publicado no YouTube
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\youtube.ps1 `
   -Acao AtualizarVideo `
@@ -92,7 +92,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\youtube.ps1 `
   -ModoJogo "International Cup Deluxe"
 ```
 
-### 4. Gerar todos os 4 modelos de Thumbnail (`ISSD`, `eFootball`, `EAFC`, `FIFA`)
+### 4. Regenerar todos os 4 modelos base de Thumbnail
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\youtube.ps1 -Acao GerarModelosJogos
 ```

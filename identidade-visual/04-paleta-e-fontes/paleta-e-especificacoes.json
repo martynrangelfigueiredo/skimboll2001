@@ -1,5 +1,6 @@
 {
   "canal": "skimboll2001",
+  "restricao_marcas": "NUNCA referenciar Nintendo, Super Nintendo, SNES, Super Famicom ou Konami em nenhum arquivo, imagem, titulo, descricao ou tag.",
   "lemas_oficiais": [
     "Skimboll desde 2001",
     "Skimboll seit 2001",
@@ -7,11 +8,21 @@
     "Skimboll 自 2001 年"
   ],
   "simbolo_oficial": "Triângulo invertido amarelo (▽) com 'S' centralizado e '20' / '01' nos cantos superiores sobre fundo vermelho (#D21D1D)",
-  "jogos_suportados": [
-    "ISSD — International Superstar Soccer Deluxe (SNES, NINJAISSD, Angelo Salles International Cup Deluxe Tournaments, Club World Cup Deluxe)",
-    "eFootball — Konami eFootball (Matchplay, Dream Team & Tournaments)",
-    "EAFC — EA Sports FC (EA FC 24, 25, 26, Tournaments & Ultimate Team)",
-    "FIFA — EA Sports FIFA (Edições Clássicas e Modernas)"
+  "catalogo_jogos_e_romhacks": [
+    "ISSD normal (International Superstar Soccer Deluxe)",
+    "ISSD Charmoso Gauchão - ANO (Campeonato Gaúcho ROMHACK)",
+    "ISSD Deutscher Fussball - ANO (Campeonato Alemão ROMHACK)",
+    "ISSD Champions League - ANO (Champions League ROMHACK)",
+    "ISSD Mundial de Clubes - ANO (Mundial de Clubes ROMHACK)",
+    "ISSD Campeonato Brasileiro 95, 96, 97, 98, 99",
+    "ISSD Futebol Brasileiro 95, 96, 97, 98, 99",
+    "ISSD Ronaldinho Soccer - ANO",
+    "ISSD Extended Brasil Popular - ANO (Campeonato Brasileiro com muitos times ROMHACK)",
+    "ISSD Extended (jogo normal com mais seleções atualizadas)",
+    "ISSD Extended - ANO (jogo extended com as escalações atualizadas)",
+    "eFootball",
+    "EA Sports FC (EAFC)",
+    "FIFA"
   ],
   "cores_oficiais_logo": {
     "vermelho_skimboll_principal": "#D21D1D",
@@ -22,7 +33,7 @@
     "branco_times": "#FFFFFF"
   },
   "cores_badges_jogos": {
-    "ISSD": { "fundo": "#D21D1D", "destaque": "#F4E600" },
+    "ISSD_e_ROMHACKS": { "fundo": "#D21D1D", "destaque": "#F4E600" },
     "eFootball": { "fundo": "#0038A8", "destaque": "#F4E600" },
     "EAFC": { "fundo": "#12161C", "destaque": "#00FF87" },
     "FIFA": { "fundo": "#122A5E", "destaque": "#F4E600" }

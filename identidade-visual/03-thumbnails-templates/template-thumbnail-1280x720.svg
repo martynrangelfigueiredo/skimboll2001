@@ -1,42 +1,57 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
-  <!-- Área de fundo (substituir pelo print real da partida no editor) -->
-  <rect width="1280" height="720" fill="#4A0707"/>
-  <text x="640" y="320" font-family="'Segoe UI', Arial, sans-serif" font-size="32" font-weight="700" fill="#FFD600" fill-opacity="0.35" text-anchor="middle">
-    [ INSERIR PRINT DA PARTIDA DE ISS DELUXE AQUI — 1280×720 ]
+  <!-- Área de Jogo Real à Esquerda (804x546) -->
+  <rect width="1280" height="720" fill="#8C0E0E"/>
+  <rect x="12" y="12" width="804" height="546" fill="#182218"/>
+  <text x="414" y="285" font-family="'Courier New', monospace" font-size="26" font-weight="700" fill="#F4E600" fill-opacity="0.5" text-anchor="middle">
+    [ IMAGEM REAL DA PARTIDA EM CAMPO — 804×546 ]
   </text>
 
-  <!-- Moldura Externa Vermelha e Amarelo Ouro -->
-  <rect x="6" y="6" width="1268" height="708" fill="none" stroke="#B71C1C" stroke-width="12"/>
-  <rect x="14" y="14" width="1252" height="692" fill="none" stroke="#FFD600" stroke-width="5"/>
+  <!-- Coluna Direita (X=820..1268): Logo Oficial + Faixa do Jogo + Placar Final In-Game -->
+  <rect x="820" y="12" width="448" height="546" fill="#D21D1D"/>
+  <line x1="818" y1="12" x2="818" y2="558" stroke="#F4E600" stroke-width="6"/>
 
-  <!-- Selo Superior Esquerdo: Identificação da ROM / Versão do ISSD -->
-  <rect x="34" y="34" width="390" height="66" rx="8" fill="#B71C1C" stroke="#FFD600" stroke-width="4"/>
-  <polygon points="64,52 71,66 86,66 74,75 79,90 64,80 49,90 54,75 42,66 57,66" fill="#FFD600"/>
-  <text x="242" y="78" font-family="'Courier New', monospace" font-size="28" font-weight="900" fill="#FFD600" text-anchor="middle" letter-spacing="2">
-    ISS DELUXE • SNES
+  <!-- Topo Direito: Logo Oficial SKIMBOLL (20 ▽S 01) -->
+  <rect x="828" y="14" width="432" height="178" fill="#D21D1D" stroke="#F4E600" stroke-width="3"/>
+  <text x="844" y="42" font-family="'Courier New', monospace" font-size="18" font-weight="900" fill="#F4E600">20</text>
+  <text x="1244" y="42" font-family="'Courier New', monospace" font-size="18" font-weight="900" fill="#F4E600" text-anchor="end">01</text>
+  <polygon points="990,26 1098,26 1044,112" fill="none" stroke="#F4E600" stroke-width="7"/>
+  <text x="1044" y="78" font-family="'Arial Black', sans-serif" font-size="38" font-weight="900" fill="#F4E600" text-anchor="middle">S</text>
+  <text x="1044" y="145" font-family="'Courier New', monospace" font-size="34" font-weight="900" fill="#F4E600" text-anchor="middle" letter-spacing="4">SKIMBOLL</text>
+  <text x="1044" y="176" font-family="'Courier New', monospace" font-size="14" font-weight="900" fill="#F4E600" text-anchor="middle">desde 2001 • seit 2001 • since 2001</text>
+
+  <!-- Faixa do Jogo / ROMHACK -->
+  <rect x="828" y="196" width="432" height="38" fill="#B41919" stroke="#F4E600" stroke-width="3"/>
+  <text x="1044" y="222" font-family="'Courier New', monospace" font-size="20" font-weight="900" fill="#F4E600" text-anchor="middle">
+    ★ ISS DELUXE • 16-BIT ★
   </text>
 
-  <!-- Selo Superior Direito: Assinatura do Canal -->
-  <rect x="976" y="34" width="270" height="58" rx="8" fill="#6A0B0B" stroke="#FFD600" stroke-width="3"/>
-  <text x="1111" y="72" font-family="'Russo One', 'Segoe UI', Arial, sans-serif" font-size="25" font-weight="900" fill="#FFD600" text-anchor="middle" letter-spacing="1.5">
-    SKIMBOLL<tspan fill="#FFFFFF">2001</tspan>
+  <!-- Quadro do Placar Final In-Game (X=828, Y=238, W=432, H=314) -->
+  <rect x="828" y="238" width="432" height="314" fill="#141418" stroke="#F4E600" stroke-width="3"/>
+  <text x="1044" y="395" font-family="'Courier New', monospace" font-size="20" font-weight="700" fill="#F4E600" fill-opacity="0.6" text-anchor="middle">
+    [ PLACAR FINAL IN-GAME — 432×314 ]
   </text>
 
-  <!-- Barra Inferior estilo Placar ISS Deluxe em Vermelho Forte + Borda Dupla Amarela -->
-  <rect x="34" y="548" width="1212" height="136" rx="10" fill="#8E0E0E" fill-opacity="0.96" stroke="#FFD600" stroke-width="6"/>
-  <rect x="44" y="558" width="1192" height="116" rx="6" fill="none" stroke="#FFAB00" stroke-width="2"/>
+  <!-- Barra Inferior de Torneio (Y=560..708) -->
+  <rect x="12" y="560" width="1256" height="148" fill="#D21D1D"/>
+  <line x1="12" y1="560" x2="1268" y2="560" stroke="#F4E600" stroke-width="6"/>
 
-  <!-- Bloco lateral amarelo com estrela vermelha -->
-  <rect x="34" y="548" width="24" height="136" fill="#FFD600"/>
+  <!-- Emblema ▽S à esquerda -->
+  <polygon points="34,578 138,578 86,686" fill="none" stroke="#F4E600" stroke-width="8"/>
+  <text x="86" y="628" font-family="'Arial Black', sans-serif" font-size="38" font-weight="900" fill="#F4E600" text-anchor="middle">S</text>
 
-  <!-- Título da Partida / Vídeo -->
-  <text x="84" y="636" font-family="'Russo One', 'Chakra Petch', 'Arial Black', sans-serif" font-size="60" font-weight="900" fill="#FFD600" letter-spacing="2">
-    URSS vs BRASIL — CLÁSSICO
+  <!-- Confronto e Placar -->
+  <text x="350" y="636" font-family="'Arial Black', sans-serif" font-size="44" font-weight="900" fill="#FFFFFF" text-anchor="middle">ALEMANHA</text>
+  <rect x="555" y="574" width="210" height="90" fill="#0E0E12" stroke="#F4E600" stroke-width="6"/>
+  <text x="660" y="636" font-family="'Courier New', monospace" font-size="52" font-weight="900" fill="#F4E600" text-anchor="middle">3 x 0</text>
+  <text x="970" y="636" font-family="'Arial Black', sans-serif" font-size="44" font-weight="900" fill="#FFFFFF" text-anchor="middle">JAPÃO</text>
+
+  <!-- Sub-barra Inferior -->
+  <rect x="155" y="668" width="1095" height="34" fill="#8C0E0E"/>
+  <text x="702" y="691" font-family="'Courier New', monospace" font-size="16" font-weight="900" fill="#F4E600" text-anchor="middle">
+    INTERNATIONAL CUP DELUXE • 16-BIT  |  SKIMBOLL DESDE 2001 • SEIT 2001 • SINCE 2001
   </text>
 
-  <!-- Plaqueta Direita estilo HUD do SNES (Modo/Torneio) -->
-  <rect x="955" y="578" width="265" height="76" rx="8" fill="#6A0B0B" stroke="#FFD600" stroke-width="4"/>
-  <text x="1087" y="627" font-family="'Courier New', monospace" font-size="30" font-weight="900" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">
-    WORLD SERIES
-  </text>
+  <!-- Moldura Externa -->
+  <rect x="6" y="6" width="1268" height="708" fill="none" stroke="#D21D1D" stroke-width="12"/>
+  <rect x="12" y="12" width="1256" height="696" fill="none" stroke="#F4E600" stroke-width="6"/>
 </svg>
