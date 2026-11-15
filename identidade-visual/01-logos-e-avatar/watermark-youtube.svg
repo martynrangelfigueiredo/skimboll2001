@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <!-- Watermark Oficial Skimboll (Fundo Transparente + Triângulo Invertido Amarelo com S sobre interior Vermelho) -->
+  <polygon points="60,85 740,85 400,725" fill="#D21D1D" stroke="#F4E600" stroke-width="44" stroke-linejoin="miter"/>
+  <text x="400" y="375" font-family="'Arial Black', Impact, sans-serif" font-size="250" font-weight="900" fill="#F4E600" text-anchor="middle">S</text>
+</svg>

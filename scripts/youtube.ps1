@@ -391,27 +391,37 @@ function New-MatchThumbnail {
     $Gfx.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::AntiAliasGridFit
 
     $ColorSkimRed    = [System.Drawing.Color]::FromArgb(255, 210, 29, 29)
-    $ColorSkimDark   = [System.Drawing.Color]::FromArgb(255, 140, 14, 14)
     $ColorSkimYellow = [System.Drawing.Color]::FromArgb(255, 244, 230, 0)
-    $ColorWhite      = [System.Drawing.Color]::FromArgb(255, 255, 255, 255)
-    $ColorBlack      = [System.Drawing.Color]::FromArgb(255, 14, 14, 18)
+    $ColorWhite      = [System.Drawing.Color]::FromArgb(255, 248, 249, 250)
+    $ColorMuted      = [System.Drawing.Color]::FromArgb(255, 200, 205, 212)
+    $ColorBarBg      = [System.Drawing.Color]::FromArgb(218, 12, 14, 18)
+    $ColorPillBg     = [System.Drawing.Color]::FromArgb(230, 28, 32, 40)
 
     $BrushSkimRed    = New-Object System.Drawing.SolidBrush($ColorSkimRed)
-    $BrushSkimDark   = New-Object System.Drawing.SolidBrush($ColorSkimDark)
     $BrushSkimYellow = New-Object System.Drawing.SolidBrush($ColorSkimYellow)
     $BrushWhite      = New-Object System.Drawing.SolidBrush($ColorWhite)
-    $BrushBlack      = New-Object System.Drawing.SolidBrush($ColorBlack)
-    $BrushBadge      = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, $Profile.CorBadge[0], $Profile.CorBadge[1], $Profile.CorBadge[2]))
+    $BrushMuted      = New-Object System.Drawing.SolidBrush($ColorMuted)
+    $BrushBarBg      = New-Object System.Drawing.SolidBrush($ColorBarBg)
+    $BrushPillBg     = New-Object System.Drawing.SolidBrush($ColorPillBg)
     $BrushAccent     = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, $Profile.CorDestaque[0], $Profile.CorDestaque[1], $Profile.CorDestaque[2]))
 
-    $PenYellowThick  = New-Object System.Drawing.Pen($ColorSkimYellow, 6)
-    $PenYellowThin   = New-Object System.Drawing.Pen($ColorSkimYellow, 3)
-    $PenRedOuter     = New-Object System.Drawing.Pen($ColorSkimRed, 12)
+    $PenYellowThin   = New-Object System.Drawing.Pen($ColorSkimYellow, 2)
+    $PenSubtleBorder = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(180, 244, 230, 0), 2)
 
     $FormatCenter = New-Object System.Drawing.StringFormat
     $FormatCenter.Alignment = [System.Drawing.StringAlignment]::Center
     $FormatCenter.LineAlignment = [System.Drawing.StringAlignment]::Center
     $FormatCenter.FormatFlags = [System.Drawing.StringFormatFlags]::NoWrap
+
+    $FormatLeft = New-Object System.Drawing.StringFormat
+    $FormatLeft.Alignment = [System.Drawing.StringAlignment]::Near
+    $FormatLeft.LineAlignment = [System.Drawing.StringAlignment]::Center
+    $FormatLeft.FormatFlags = [System.Drawing.StringFormatFlags]::NoWrap
+
+    $FormatRight = New-Object System.Drawing.StringFormat
+    $FormatRight.Alignment = [System.Drawing.StringAlignment]::Far
+    $FormatRight.LineAlignment = [System.Drawing.StringAlignment]::Center
+    $FormatRight.FormatFlags = [System.Drawing.StringFormatFlags]::NoWrap
 
     if (-not $ActionImgPath) {
         $CandidateLance = Join-Path $FramesDir "lance_partida.png"
@@ -426,9 +436,8 @@ function New-MatchThumbnail {
         $ScoreboardImgPath = $null
     }
 
-    $Gfx.FillRectangle($BrushSkimDark, 0, 0, 1280, 720)
-
-    if ($ActionImgPath -and (Test-Path $ActionImgPath) -and $ScoreboardImgPath -and (Test-Path $ScoreboardImgPath)) {
+    # 1. FUNDO 100% TELA CHEIA (1280x720) — O VIDEO E O PROTAGONISTA ABSOLUTO
+    if ($ActionImgPath -and (Test-Path $ActionImgPath)) {
         $ActImg = [System.Drawing.Image]::FromFile((Resolve-Path $ActionImgPath).Path)
         if ($Profile.PixelArt) {
             $Gfx.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::NearestNeighbor
@@ -436,107 +445,74 @@ function New-MatchThumbnail {
         } else {
             $Gfx.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
         }
-        $Gfx.DrawImage($ActImg, 12, 12, 804, 546)
+        $Gfx.DrawImage($ActImg, 0, 0, 1280, 720)
         $ActImg.Dispose()
+    } else {
+        # Fundo tatico sobrio quando gerado como modelo sem video
+        $GradBg = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
+            (New-Object System.Drawing.Point(0, 0)),
+            (New-Object System.Drawing.Point(1280, 720)),
+            ([System.Drawing.Color]::FromArgb(255, 18, 28, 22)),
+            ([System.Drawing.Color]::FromArgb(255, 10, 14, 18))
+        )
+        $Gfx.FillRectangle($GradBg, 0, 0, 1280, 720)
 
-        $Gfx.FillRectangle($BrushSkimRed, 820, 12, 448, 546)
-        Draw-SkimbollOfficialBadge -Gfx $Gfx -X 828 -Y 14 -W 432 -H 178
+        $PitchPen = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(45, 255, 255, 255), 3)
+        $Gfx.DrawRectangle($PitchPen, 90, 50, 1100, 560)
+        $Gfx.DrawLine($PitchPen, 640, 50, 640, 610)
+        $Gfx.DrawEllipse($PitchPen, 510, 200, 260, 260)
 
-        $Gfx.FillRectangle($BrushBadge, 828, 196, 432, 38)
-        $Gfx.DrawRectangle($PenYellowThin, 828, 196, 432, 38)
-        $Star = [char]0x2605
-        $BadgeTxt = "$Star $($Profile.NomeCurto) $Star"
-        $FontRightBadge = Get-FittedFont -Gfx $Gfx -Text $BadgeTxt -FontFamily "Consolas" -MaxSize 20 -MinSize 13 -MaxWidth 418
-        $Gfx.DrawString($BadgeTxt, $FontRightBadge, $BrushAccent, (New-Object System.Drawing.RectangleF(828, 196, 432, 38)), $FormatCenter)
+        $FontWatermarkCenter = Get-FittedFont -Gfx $Gfx -Text $Profile.NomeCompleto -FontFamily "Segoe UI" -MaxSize 42 -MinSize 24 -MaxWidth 1000
+        $Gfx.DrawString($Profile.NomeCompleto, $FontWatermarkCenter, $BrushMuted, (New-Object System.Drawing.RectangleF(140, 280, 1000, 80)), $FormatCenter)
+    }
+
+    # 2. MINIATURA DISCRETA DO PLACAR FINAL IN-GAME (Canto Inferior Direito, acima da barra: 300x220)
+    if ($ScoreboardImgPath -and (Test-Path $ScoreboardImgPath)) {
+        $PipX = 958
+        $PipY = 412
+        $PipW = 304
+        $PipH = 224
+        $ShadowBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(160, 0, 0, 0))
+        $Gfx.FillRectangle($ShadowBrush, ($PipX - 4), ($PipY - 4), ($PipW + 8), ($PipH + 8))
 
         $ScoreImg = [System.Drawing.Image]::FromFile((Resolve-Path $ScoreboardImgPath).Path)
         if ($Profile.PixelArt) {
             $Gfx.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::NearestNeighbor
         }
-        $Gfx.DrawImage($ScoreImg, 828, 238, 432, 314)
+        $Gfx.DrawImage($ScoreImg, $PipX, $PipY, $PipW, $PipH)
         $ScoreImg.Dispose()
-        $Gfx.DrawRectangle($PenYellowThin, 828, 238, 432, 314)
-
-        $Gfx.DrawLine($PenYellowThick, 818, 12, 818, 558)
-    } else {
-        if ($ActionImgPath -and (Test-Path $ActionImgPath)) {
-            $ActImg = [System.Drawing.Image]::FromFile((Resolve-Path $ActionImgPath).Path)
-            $Gfx.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
-            $Gfx.DrawImage($ActImg, 12, 12, 804, 546)
-            $ActImg.Dispose()
-        } else {
-            $GradBg = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
-                (New-Object System.Drawing.Point(0, 0)),
-                (New-Object System.Drawing.Point(820, 560)),
-                ([System.Drawing.Color]::FromArgb(255, $Profile.CorBadge[0], $Profile.CorBadge[1], $Profile.CorBadge[2])),
-                $ColorBlack
-            )
-            $Gfx.FillRectangle($GradBg, 12, 12, 804, 546)
-
-            $PitchPen = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(75, 244, 230, 0), 4)
-            $Gfx.DrawRectangle($PitchPen, 48, 42, 730, 486)
-            $Gfx.DrawLine($PitchPen, 413, 42, 413, 528)
-            $Gfx.DrawEllipse($PitchPen, 313, 185, 200, 200)
-
-            $FontGameBig = Get-FittedFont -Gfx $Gfx -Text $Profile.NomeCurto -FontFamily "Arial Black" -MaxSize 52 -MinSize 24 -MaxWidth 740
-            $Gfx.DrawString($Profile.NomeCurto, $FontGameBig, $BrushAccent, (New-Object System.Drawing.RectangleF(32, 180, 760, 100)), $FormatCenter)
-
-            $FontSubBig = Get-FittedFont -Gfx $Gfx -Text $Profile.SubtituloThumb -FontFamily "Consolas" -MaxSize 26 -MinSize 16 -MaxWidth 740
-            $Gfx.DrawString($Profile.SubtituloThumb, $FontSubBig, $BrushWhite, (New-Object System.Drawing.RectangleF(32, 280, 760, 60)), $FormatCenter)
-        }
-
-        $Gfx.FillRectangle($BrushSkimRed, 820, 12, 448, 546)
-        Draw-SkimbollOfficialBadge -Gfx $Gfx -X 828 -Y 20 -W 432 -H 315
-
-        $Gfx.FillRectangle($BrushBlack, 836, 350, 416, 192)
-        $Gfx.DrawRectangle($PenYellowThin, 836, 350, 416, 192)
-        $FontCardTitle = Get-FittedFont -Gfx $Gfx -Text $Profile.NomeCurto -FontFamily "Consolas" -MaxSize 24 -MinSize 16 -MaxWidth 390
-        $Gfx.DrawString($Profile.NomeCurto, $FontCardTitle, $BrushSkimYellow, (New-Object System.Drawing.RectangleF(840, 365, 408, 50)), $FormatCenter)
-
-        $FontModo = Get-FittedFont -Gfx $Gfx -Text $Modo.ToUpper() -FontFamily "Arial Black" -MaxSize 24 -MinSize 16 -MaxWidth 390
-        $Gfx.DrawString($Modo.ToUpper(), $FontModo, $BrushWhite, (New-Object System.Drawing.RectangleF(840, 425, 408, 55)), $FormatCenter)
-
-        $FontCanalTag = New-Object System.Drawing.Font("Consolas", 18, [System.Drawing.FontStyle]::Bold)
-        $Gfx.DrawString("SKIMBOLL DESDE 2001", $FontCanalTag, $BrushSkimYellow, (New-Object System.Drawing.RectangleF(840, 485, 408, 40)), $FormatCenter)
-
-        $Gfx.DrawLine($PenYellowThick, 818, 12, 818, 558)
+        $Gfx.DrawRectangle($PenSubtleBorder, $PipX, $PipY, $PipW, $PipH)
     }
 
-    # Barra Inferior de Torneio (Y=560..708)
-    $Gfx.FillRectangle($BrushSkimRed, 12, 560, 1256, 148)
-    $Gfx.DrawLine($PenYellowThick, 12, 560, 1268, 560)
+    # 3. BARRA INFERIOR DISCRETA E SOBRIA (Apenas 68px de altura, semi-transparente)
+    $BarY = 652
+    $BarH = 68
+    $Gfx.FillRectangle($BrushBarBg, 0, $BarY, 1280, $BarH)
+    $Gfx.DrawLine($PenYellowThin, 0, $BarY, 1280, $BarY)
 
+    # Watermark Oficial (Triangulo Invertido ▽ com S) discreto na esquerda da barra
     $TriPts = @(
-        (New-Object System.Drawing.Point(34, 578)),
-        (New-Object System.Drawing.Point(138, 578)),
-        (New-Object System.Drawing.Point(86, 686))
+        (New-Object System.Drawing.PointF(22, 664)),
+        (New-Object System.Drawing.PointF(70, 664)),
+        (New-Object System.Drawing.PointF(46, 710))
     )
-    $PenTri = New-Object System.Drawing.Pen($ColorSkimYellow, 8)
-    $Gfx.DrawPolygon($PenTri, $TriPts)
-    $FontTriS = New-Object System.Drawing.Font("Arial Black", 36, [System.Drawing.FontStyle]::Bold)
-    $Gfx.DrawString("S", $FontTriS, $BrushSkimYellow, (New-Object System.Drawing.RectangleF(34, 576, 104, 72)), $FormatCenter)
+    $Gfx.FillPolygon($BrushSkimRed, $TriPts)
+    $PenTriSmall = New-Object System.Drawing.Pen($ColorSkimYellow, 3)
+    $Gfx.DrawPolygon($PenTriSmall, $TriPts)
+    $FontTriS = New-Object System.Drawing.Font("Arial Black", 16, [System.Drawing.FontStyle]::Bold)
+    $Gfx.DrawString("S", $FontTriS, $BrushSkimYellow, (New-Object System.Drawing.RectangleF(22, 662, 48, 34)), $FormatCenter)
 
+    # Confronto e Placar Limpos (Esquerda/Centro da barra)
     $T1Upper = $T1.ToUpper()
     $T2Upper = $T2.ToUpper()
+    $MatchString = "$T1Upper   $G1 x $G2   $T2Upper"
+    $FontMatch = Get-FittedFont -Gfx $Gfx -Text $MatchString -FontFamily "Segoe UI" -MaxSize 28 -MinSize 18 -MaxWidth 740
+    $Gfx.DrawString($MatchString, $FontMatch, $BrushWhite, (New-Object System.Drawing.RectangleF(88, $BarY, 750, $BarH)), $FormatLeft)
 
-    $FontT1 = Get-FittedFont -Gfx $Gfx -Text $T1Upper -FontFamily "Arial Black" -MaxSize 46 -MinSize 24 -MaxWidth 380
-    $Gfx.DrawString($T1Upper, $FontT1, $BrushWhite, (New-Object System.Drawing.RectangleF(155, 572, 390, 92)), $FormatCenter)
-
-    $Gfx.FillRectangle($BrushBlack, 555, 574, 210, 90)
-    $Gfx.DrawRectangle($PenYellowThick, 555, 574, 210, 90)
-    $ScoreStr = "$G1 x $G2"
-    $FontScore = Get-FittedFont -Gfx $Gfx -Text $ScoreStr -FontFamily "Consolas" -MaxSize 50 -MinSize 30 -MaxWidth 195
-    $Gfx.DrawString($ScoreStr, $FontScore, $BrushSkimYellow, (New-Object System.Drawing.RectangleF(555, 574, 210, 90)), $FormatCenter)
-
-    $FontT2 = Get-FittedFont -Gfx $Gfx -Text $T2Upper -FontFamily "Arial Black" -MaxSize 46 -MinSize 24 -MaxWidth 380
-    $Gfx.DrawString($T2Upper, $FontT2, $BrushWhite, (New-Object System.Drawing.RectangleF(775, 572, 390, 92)), $FormatCenter)
-
-    $Gfx.FillRectangle($BrushSkimDark, 155, 668, 1095, 34)
-    $FontBottomSub = Get-FittedFont -Gfx $Gfx -Text "$($Profile.SubtituloThumb)  |  SKIMBOLL DESDE 2001 • SEIT 2001 • SINCE 2001" -FontFamily "Consolas" -MaxSize 16 -MinSize 12 -MaxWidth 1080
-    $Gfx.DrawString("$($Profile.SubtituloThumb)  |  SKIMBOLL DESDE 2001 • SEIT 2001 • SINCE 2001", $FontBottomSub, $BrushSkimYellow, (New-Object System.Drawing.RectangleF(155, 668, 1095, 34)), $FormatCenter)
-
-    $Gfx.DrawRectangle($PenRedOuter, 6, 6, 1268, 708)
-    $Gfx.DrawRectangle($PenYellowThick, 12, 12, 1256, 696)
+    # Identificacao Discreta do Jogo / ROMHACK na Direita da Barra
+    $GameLabel = "$($Profile.NomeCurto)  •  SKIMBOLL2001"
+    $FontGame = Get-FittedFont -Gfx $Gfx -Text $GameLabel -FontFamily "Consolas" -MaxSize 18 -MinSize 13 -MaxWidth 410
+    $Gfx.DrawString($GameLabel, $FontGame, $BrushSkimYellow, (New-Object System.Drawing.RectangleF(840, $BarY, 420, $BarH)), $FormatRight)
 
     $Bmp.Save($OutPath, [System.Drawing.Imaging.ImageFormat]::Png)
     $Gfx.Dispose()

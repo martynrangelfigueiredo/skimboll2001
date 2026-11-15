@@ -1,46 +1,63 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2560 1440" width="2560" height="1440">
-  <!-- Fundo Vermelho Oficial Skimboll (#D21D1D) e faixa inferior (#B41919) -->
-  <rect width="2560" height="1440" fill="#D21D1D"/>
-  <rect x="0" y="1220" width="2560" height="220" fill="#B41919"/>
+  <defs>
+    <!-- Gradiente 3D clássico estilo International Superstar Soccer Deluxe -->
+    <linearGradient id="issdGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFF000"/>
+      <stop offset="55%" stop-color="#FF9000"/>
+      <stop offset="100%" stop-color="#D21D1D"/>
+    </linearGradient>
+  </defs>
 
-  <!-- Linhas sutis de campo em amarelo para TV -->
-  <g stroke="#F4E600" stroke-opacity="0.18" stroke-width="5" fill="none">
+  <!-- Fundo Vermelho Oficial Skimboll (#D21D1D) com marcação visual de campo -->
+  <rect width="2560" height="1440" fill="#CE1A1A"/>
+  <g stroke="#F4E600" stroke-opacity="0.22" stroke-width="5" fill="none">
     <rect x="140" y="90" width="2280" height="1260"/>
     <line x1="1280" y1="90" x2="1280" y2="1350"/>
-    <circle cx="1280" cy="720" r="290"/>
+    <circle cx="1280" cy="720" r="280"/>
+    <rect x="140" y="420" width="280" height="600"/>
+    <rect x="2140" y="420" width="280" height="600"/>
   </g>
 
-  <!-- ÁREA SEGURA DO YOUTUBE (1546x423 centralizada: x=507, y=508) -->
-  <rect x="507" y="508" width="1546" height="423" fill="#D21D1D" stroke="#F4E600" stroke-width="6"/>
-  <rect x="513" y="855" width="1534" height="70" fill="#B41919"/>
+  <!-- ÁREA SEGURA DO YOUTUBE (1546x423 centralizada: x=507, y=508) — 100% Visual estilo ISS Deluxe -->
+  <rect x="507" y="508" width="1546" height="423" fill="#B81616" stroke="#F4E600" stroke-width="6"/>
 
-  <!-- "20" e "01" nos cantos superiores da área segura -->
-  <text x="542" y="562" font-family="'Courier New', monospace" font-size="38" font-weight="900" fill="#F4E600" letter-spacing="2">20</text>
-  <text x="2018" y="562" font-family="'Courier New', monospace" font-size="38" font-weight="900" fill="#F4E600" text-anchor="end" letter-spacing="2">01</text>
+  <!-- Gramado 16-bit estilizado na base esquerda da área segura -->
+  <rect x="540" y="810" width="520" height="85" rx="8" fill="#2E9B27"/>
+  <rect x="560" y="828" width="480" height="18" fill="#46B83D"/>
+  <rect x="560" y="862" width="480" height="18" fill="#46B83D"/>
 
-  <!-- Logo Oficial Triângulo Invertido + S à esquerda da área segura -->
-  <g transform="translate(650, 545)">
-    <polygon points="0,0 220,0 110,205" fill="none" stroke="#F4E600" stroke-width="15"/>
-    <text x="110" y="118" font-family="'Arial Black', Impact, sans-serif" font-size="88" font-weight="900" fill="#F4E600" text-anchor="middle">S</text>
+  <!-- Bola de futebol retrô sobre o gramado -->
+  <circle cx="995" cy="825" r="34" fill="#FFFFFF" stroke="#141418" stroke-width="5"/>
+  <polygon points="995,803 1011,815 1005,833 985,833 979,815" fill="#141418"/>
+
+  <!-- Triângulo Invertido Oficial (▽ com S) à esquerda -->
+  <g transform="translate(580, 545)">
+    <polygon points="0,0 250,0 125,235" fill="#D21D1D" stroke="#F4E600" stroke-width="18" stroke-linejoin="miter"/>
+    <text x="125" y="132" font-family="'Arial Black', Impact, sans-serif" font-size="102" font-weight="900" fill="#F4E600" text-anchor="middle">S</text>
   </g>
 
-  <!-- Nome SKIMBOLL e Lema Multilíngue à direita -->
-  <text x="1420" y="645" font-family="'Courier New', 'Arial Black', monospace" font-size="96" font-weight="900" fill="#F4E600" text-anchor="middle" letter-spacing="8">
-    SKIMBOLL
-  </text>
+  <!-- Tipografia 3D Inclinada estilo INTERNATIONAL SKIMBOLL SOCCER DELUXE -->
+  <g transform="translate(1440, 625) rotate(-5) skewX(-10)">
+    <text x="0" y="-58" font-family="'Arial Black', Impact, sans-serif" font-size="48" font-weight="900" fill="#FFFFFF" stroke="#0E0E12" stroke-width="8" paint-order="stroke" text-anchor="middle" letter-spacing="4">
+      INTERNATIONAL
+    </text>
+    <!-- Sombra 3D Preta -->
+    <text x="10" y="42" font-family="'Arial Black', Impact, sans-serif" font-size="106" font-weight="900" fill="#0E0E12" text-anchor="middle" letter-spacing="3">
+      SKIMBOLL
+    </text>
+    <text x="0" y="34" font-family="'Arial Black', Impact, sans-serif" font-size="106" font-weight="900" fill="url(#issdGrad)" stroke="#0E0E12" stroke-width="8" paint-order="stroke" text-anchor="middle" letter-spacing="3">
+      SKIMBOLL
+    </text>
 
-  <text x="1420" y="705" font-family="'Courier New', monospace" font-size="27" font-weight="900" fill="#F4E600" text-anchor="middle" letter-spacing="1.5">
-    desde 2001 • seit 2001 • since 2001 • 自 2001 年
-  </text>
+    <text x="8" y="136" font-family="'Arial Black', Impact, sans-serif" font-size="88" font-weight="900" fill="#0E0E12" text-anchor="middle" letter-spacing="4">
+      SOCCER
+    </text>
+    <text x="0" y="128" font-family="'Arial Black', Impact, sans-serif" font-size="88" font-weight="900" fill="url(#issdGrad)" stroke="#0E0E12" stroke-width="8" paint-order="stroke" text-anchor="middle" letter-spacing="4">
+      SOCCER
+    </text>
 
-  <!-- Jogos do Canal -->
-  <rect x="940" y="740" width="960" height="58" fill="#B41919" stroke="#F4E600" stroke-width="3"/>
-  <text x="1420" y="779" font-family="'Courier New', monospace" font-size="27" font-weight="900" fill="#F4E600" text-anchor="middle" letter-spacing="2">
-    ISS DELUXE &amp; ROMHACKS • eFOOTBALL • EA SPORTS FC • FIFA
-  </text>
-
-  <!-- Rodapé da Área Segura -->
-  <text x="1280" y="901" font-family="'Courier New', monospace" font-size="25" font-weight="900" fill="#F4E600" text-anchor="middle" letter-spacing="3">
-    GAMEPLAYS &amp; TORNEIOS • SÓBRIO E SEM FRUFRU • PARA TODAS AS IDADES
-  </text>
+    <text x="55" y="204" font-family="'Arial Black', Impact, sans-serif" font-size="62" font-weight="900" fill="url(#issdGrad)" stroke="#0E0E12" stroke-width="7" paint-order="stroke" text-anchor="middle" letter-spacing="5">
+      DELUXE
+    </text>
+  </g>
 </svg>
