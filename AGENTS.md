@@ -30,7 +30,8 @@ O canal publica partidas completas dos seguintes jogos (suportados nativamente p
   - `EAFC` (*EA Sports FC*)
   - `FIFA`
 
-## 🔄 4. FLUXO DE TRABALHO E GIT (OBRIGATÓRIO)
-1. **Detecção Automática nos Últimos Segundos:** Quando o usuário colocar um vídeo em `videos/` e pedir para postar, **não pergunte qual foi a partida nem o placar**. Execute `-Acao ExtrairFrames` no `scripts/youtube.ps1` e leia as imagens geradas em `.secrets/frames/` (especialmente os últimos segundos `final_menos_10s.png`, `final_menos_6s.png`, `final_menos_3s.png`) para identificar os dois times e o placar final.
-2. **Vídeos Fora do Git:** Todos os vídeos (`.mkv`, `.mp4`) devem ficar em `videos/` e permanecer no `.gitignore`.
-3. **Commit & Push Sempre:** Após qualquer alteração em scripts, documentação ou templates, faça sempre `git add`, `git commit` e `git push`.
+## 🔄 4. FLUXO DE TRABALHO, AGENDA (06:00 / 17:30) E GIT (OBRIGATÓRIO)
+1. **Detecção Automática nos Últimos Segundos:** Quando o usuário colocar vídeos em `videos/` e pedir para postar ou agendar, **não pergunte qual foi a partida nem o placar**. Execute `-Acao ExtrairFrames` no `scripts/youtube.ps1` e leia as imagens geradas em `.secrets/frames/` para identificar os dois times, a ROMHACK e o placar final.
+2. **Agenda Fixa de Publicação (06:00 e 17:30):** O canal publica vídeos sempre às **06:00** e às **17:30** (`-03:00`). Use a flag `-AgendarProximoSlot` (ou `-DataPublicacao "YYYY-MM-DDTHH:mm:ss-03:00"`) no `scripts/youtube.ps1` para agendar diretamente na API do YouTube (`publishAt`) e registrar em `agenda-publicacoes.json`.
+3. **Vídeos Fora do Git:** Todos os vídeos (`.mkv`, `.mp4`) devem ficar em `videos/` e permanecer no `.gitignore`.
+4. **Commit & Push Sempre:** Após qualquer alteração em scripts, documentação, `agenda-publicacoes.json` ou templates, faça sempre `git add`, `git commit` e `git push`.

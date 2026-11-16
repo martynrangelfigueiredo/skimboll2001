@@ -1,16 +1,14 @@
 ﻿<#
 .SYNOPSIS
-    Publicador Oficial Multi-Jogos & ROMHACKs - Canal Skimboll2001
+    Publicador e Agendador Oficial Multi-Jogos & ROMHACKs - Canal Skimboll2001
     - PROIBIDO referenciar "Nintendo", "Super Nintendo", "SNES", "Super Famicom" ou "Konami"
-    - Suporta automaticamente todo o catalogo de ISSD + ROMHACKs (Gauchao, Deutscher Fussball,
-      Champions League, Mundial de Clubes, Campeonato Brasileiro 95-99, Futebol Brasileiro 95-99,
-      Ronaldinho Soccer, ISSD Extended / Brasil Popular) alem de eFootball, EAFC e FIFA.
-    - Usa imagens reais da partida (lance em campo + placar final dos ultimos segundos) + Logo Oficial SKIMBOLL (20 ▽S 01)
+    - Suporta agendamento nativo na API do YouTube (publishAt) sempre nos horarios 06:00 e 17:30 (-03:00)
+    - Suporta todo o catalogo de ISSD + ROMHACKs, eFootball, EAFC e FIFA
 #>
 
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet("Login", "Status", "AtualizarCanal", "ExtrairFrames", "PostarVideo", "AtualizarVideo", "GerarThumb", "GerarModelosJogos")]
+    [ValidateSet("Login", "Status", "AtualizarCanal", "ExtrairFrames", "PostarVideo", "AtualizarVideo", "GerarThumb", "GerarModelosJogos", "ListarAgenda")]
     [string]$Acao,
 
     [string]$Jogo = "Auto",
@@ -27,6 +25,10 @@ param(
     [string]$ModoJogo = "International Cup Deluxe",
     [string]$VersaoRom = "",
     [string]$Privacidade = "public",
+    [string]$DataPublicacao = "",       # Formato ISO 8601 ex: 2026-11-17T06:00:00-03:00
+    [switch]$AgendarProximoSlot,        # Calcula automaticamente o proximo slot 06:00 ou 17:30
+    [string]$TituloCustom = "",         # Opcional para treinos/especiais
+    [string]$TextoBarraCustom = "",     # Opcional para barra inferior da thumb
     [string]$ArquivoThumb,
     [string]$ImagemLance,
     [string]$ImagemPlacar
@@ -38,19 +40,76 @@ $VideosDir  = Join-Path $PSScriptRoot "..\videos"
 $FramesDir  = Join-Path $PSScriptRoot "..\.secrets\frames"
 $LogoPath   = Join-Path $PSScriptRoot "..\identidade-visual\01-logos-e-avatar\logo-oficial-skimboll2001.png"
 $ThumbsDir  = Join-Path $PSScriptRoot "..\identidade-visual\03-thumbnails-templates"
+$AgendaPath = Join-Path $PSScriptRoot "..\agenda-publicacoes.json"
 
-# Funcao que resolve o perfil exato do jogo ou ROMHACK (SEM mencionar Nintendo/SNES/Konami)
+function Get-NextScheduleSlot {
+    # Horarios fixos da agenda do canal: 06:00 e 17:30 (horario de Brasilia -03:00)
+    $Now = Get-Date
+    $LastScheduled = $Now
+
+    if (Test-Path $AgendaPath) {
+        try {
+            $AgendaItems = Get-Content $AgendaPath -Raw -Encoding UTF8 | ConvertFrom-Json
+            foreach ($item in $AgendaItems) {
+                if ($item.publishAt) {
+                    $dt = [DateTime]::Parse($item.publishAt)
+                    if ($dt -gt $LastScheduled) {
+                        $LastScheduled = $dt
+                    }
+                }
+            }
+        } catch {}
+    }
+
+    # Encontrar o proximo slot (06:00 ou 17:30) estritamente apos $LastScheduled
+    $CandidateDate = $LastScheduled.Date
+    for ($d = 0; $d -le 60; $d++) {
+        $Day = $CandidateDate.AddDays($d)
+        $SlotMorning = New-Object DateTime($Day.Year, $Day.Month, $Day.Day, 6, 0, 0)
+        $SlotEvening = New-Object DateTime($Day.Year, $Day.Month, $Day.Day, 17, 30, 0)
+
+        if ($SlotMorning -gt $LastScheduled.AddMinutes(5)) {
+            return $SlotMorning.ToString("yyyy-MM-ddTHH:mm:ss-03:00")
+        }
+        if ($SlotEvening -gt $LastScheduled.AddMinutes(5)) {
+            return $SlotEvening.ToString("yyyy-MM-ddTHH:mm:ss-03:00")
+        }
+    }
+}
+
+function Save-AgendaEntry {
+    param([string]$VideoId, [string]$Titulo, [string]$Arquivo, [string]$Status, [string]$PublishAt)
+    $List = @()
+    if (Test-Path $AgendaPath) {
+        try {
+            $Existing = Get-Content $AgendaPath -Raw -Encoding UTF8 | ConvertFrom-Json
+            if ($Existing) { $List = @($Existing) }
+        } catch {}
+    }
+    $NewEntry = [PSCustomObject]@{
+        videoId    = $VideoId
+        url        = "https://youtu.be/$VideoId"
+        titulo     = $Titulo
+        arquivo    = $Arquivo
+        status     = $Status
+        publishAt  = $PublishAt
+        enviadoEm  = (Get-Date).ToString("yyyy-MM-ddTHH:mm:ss-03:00")
+    }
+    $List += $NewEntry
+    $Json = $List | ConvertTo-Json -Depth 5
+    [System.IO.File]::WriteAllText($AgendaPath, $Json, (New-Object System.Text.UTF8Encoding($false)))
+}
+
 function Get-GameProfile {
     param([string]$InputJogo, [string]$InputAno, [string]$InputRom, [string]$VideoFileName)
 
     $Combined = "$InputJogo $InputRom $VideoFileName".Trim()
     $AnoFinal = $InputAno
-    if (-not $AnoFinal -and $Combined -match "\b(199[5-9]|20[0-2][0-9]|9[5-9])\b") {
+    if (-not $AnoFinal -and $Combined -match "\b(199[5-9]|20[0-2][0-9]|9[5-9]|2[4-9])\b") {
         $AnoFinal = $Matches[1]
     }
     $SufixoAno = if ($AnoFinal) { " $AnoFinal" } else { "" }
 
-    # 1. eFootball
     if ($InputJogo -eq "eFootball" -or $Combined -match "(?i)\befootball\b") {
         return @{
             Key            = "eFootball"
@@ -66,7 +125,6 @@ function Get-GameProfile {
         }
     }
 
-    # 2. EAFC
     if ($InputJogo -eq "EAFC" -or $Combined -match "(?i)\beafc\b|ea\s*sports\s*fc|\bfc\s*2[456]\b") {
         return @{
             Key            = "EAFC"
@@ -82,7 +140,6 @@ function Get-GameProfile {
         }
     }
 
-    # 3. FIFA
     if ($InputJogo -eq "FIFA" -or $Combined -match "(?i)\bfifa\b") {
         return @{
             Key            = "FIFA"
@@ -98,7 +155,6 @@ function Get-GameProfile {
         }
     }
 
-    # 4. Variacoes e ROMHACKs de ISSD (International Superstar Soccer Deluxe)
     $NomeCurto    = "ISS DELUXE • 16-BIT"
     $NomeCompleto = "International Superstar Soccer Deluxe"
     $SubThumb     = "INTERNATIONAL CUP DELUXE • 16-BIT"
@@ -122,7 +178,7 @@ function Get-GameProfile {
         $ExtraHash   += " #DeutscherFussball #Bundesliga #CampeonatoAlemao #ROMHACK"
         $ExtraTags   += @("ISSD Deutscher Fussball", "Bundesliga ISSD", "Campeonato Alemao ISSD")
     }
-    elseif ($Combined -match "(?i)champions\s*league") {
+    elseif ($Combined -match "(?i)champions\s*league|\bcl\s*2[0-9]\b") {
         $NomeCurto    = "ISSD CHAMPIONS LEAGUE$SufixoAno"
         $NomeCompleto = "ISSD Champions League$SufixoAno"
         $SubThumb     = "CHAMPIONS LEAGUE ROMHACK$SufixoAno • ISSD"
@@ -194,23 +250,19 @@ function Get-GameProfile {
 }
 
 $IssdTeamKeywords = @{
-    "Brasil"     = "Brazil, Allejo, Gomez, Beranco, Pardilla, Ferreira, Cicero, Roca, Santos, Silva"
-    "Alemanha"   = "Germany, Kolle, Sieke, Kuhnert, Bergmann, Strauss, Becker, Muller, Stein"
-    "Japao"      = "Japan, Fujimoto, Paz, Hasebe, Takeda, Moriyama, Sato, Kojima, Blue Samurai"
-    "Italia"     = "Italy, Galfano, Carboni, Premoli, Pagani, Rossi, Conti, Azzurra"
-    "Argentina"  = "Argentina, Capitale, Redonda, Fuerte, Ayala, Galvez, Albiceleste"
-    "Inglaterra" = "England, Milner, Wright, Bruce, Clarke, Baker"
-    "Holanda"    = "Netherlands, Holland, Van Wijk, Rijkaard, De Vries, Koppers"
-    "Franca"     = "France, Dubois, Moreau, Girard, Blanc, Laurent"
-    "Espanha"    = "Spain, Quinteros, Aguilera, Romano, Montoya"
-    "URSS"       = "USSR, Russia, Uniao Sovietica, Korneev, Ivanov, Petrov"
-    "Russia"     = "Russia, USSR, Uniao Sovietica, Korneev, Ivanov, Petrov"
-    "Colombia"   = "Colombia, Murillo, Valderrama, Alvarez, Zapata"
-    "Uruguai"    = "Uruguay, Sosa, Morales, Silva, Celeste"
-    "Mexico"     = "Mexico, Negrete, Santana, Flores"
-    "EUA"        = "USA, Estados Unidos, Lalas, Jones, Ramos"
-    "Nigeria"    = "Nigeria, Babangida, Okocha, Amokachi"
-    "Camaroes"   = "Cameroon, Milla, Omam, Song"
+    "Brasil"          = "Brazil, Allejo, Gomez, Beranco, Pardilla, Ferreira, Cicero, Roca, Santos, Silva, Ronaldo, Rivaldo, Roberto Carlos"
+    "Brasil99"        = "Brazil 1999, Brasil 99, Ronaldo, Rivaldo, Christian, Roberto Carlos, Cafu, Dida, Emerson, Ze Roberto"
+    "Franca98"        = "France 1998, Franca 98, Zidane, Deschamps, Henry, Trezeguet, Barthez, Blanc, Thuram, Petit, Vieira"
+    "Alemanha"        = "Germany, Kolle, Sieke, Kuhnert, Klahold, Bergmann, Strauss, Becker, Muller, Stein"
+    "RepublicaTcheca" = "Czech Republic, Czech, Blazek, Nedved, Poborsky, Berger, Koller, Smicer"
+    "Japao"           = "Japan, Fujimoto, Paz, Hasebe, Takeda, Moriyama, Sato, Kojima, Blue Samurai"
+    "Italia"          = "Italy, Galfano, Carboni, Premoli, Pagani, Rossi, Conti, Azzurra"
+    "Argentina"       = "Argentina, Capitale, Redonda, Fuerte, Ayala, Galvez, Albiceleste"
+    "Inglaterra"      = "England, Milner, Wright, Bruce, Clarke, Baker"
+    "Holanda"         = "Netherlands, Holland, Van Wijk, Rijkaard, De Vries, Koppers"
+    "Franca"          = "France, Dubois, Moreau, Girard, Blanc, Laurent"
+    "BayernDeMunique" = "Bayern Munchen, Bayern Munich, Harry Kane, Goretzka, Alphonso Davies, Urbig, Musiala, Kimmich"
+    "BorussiaDortmund"= "Borussia Dortmund, BVB, Ryerson, Der Klassiker, Bundesliga, Champions League"
 }
 
 function Resolve-TargetVideo([string]$InputPath) {
@@ -241,15 +293,16 @@ function Invoke-ExtractMatchFrames([System.IO.FileInfo]$VideoFile) {
     Get-ChildItem $FramesDir -File -ErrorAction SilentlyContinue | Remove-Item -Force
 
     Write-Host "Extraindo quadros da partida e placar final de '$($VideoFile.Name)'..." -ForegroundColor Cyan
-    foreach ($offset in @(25, 15, 10, 6, 3, 1)) {
+    foreach ($offset in @(25, 15, 10, 8, 5, 2)) {
         $outImg = Join-Path $FramesDir "final_menos_${offset}s.png"
         & $FfmpegExe -y -loglevel error -sseof "-$offset" -i $VideoFile.FullName -frames:v 1 $outImg
     }
-    foreach ($sec in @(120, 300, 540)) {
+    foreach ($sec in @(60, 180, 300)) {
         $actImg = Join-Path $FramesDir "lance_${sec}s.png"
         & $FfmpegExe -y -loglevel error -ss $sec -i $VideoFile.FullName -frames:v 1 $actImg
     }
-    $mainLance = Join-Path $FramesDir "lance_300s.png"
+    $mainLance = Join-Path $FramesDir "lance_180s.png"
+    if (-not (Test-Path $mainLance)) { $mainLance = Join-Path $FramesDir "lance_60s.png" }
     $destLance = Join-Path $FramesDir "lance_partida.png"
     if (Test-Path $mainLance) { Copy-Item $mainLance $destLance -Force }
 }
@@ -274,41 +327,51 @@ function Remove-Accents([string]$Text) {
 
 function Build-MatchSeoData {
     param(
-        [hashtable]$Profile, [string]$T1, [string]$T2, [int]$G1, [int]$G2, [string]$Modo, [string]$Rom
+        [hashtable]$Profile, [string]$T1, [string]$T2, [int]$G1, [int]$G2, [string]$Modo, [string]$Rom, [string]$CustomTitle
     )
 
     $NomeJogo = if ($Rom) { $Rom } else { $Profile.NomeCompleto }
 
-    # Titulo otimizado com Partida + Placar + Jogo + Canal (MAX 100 chars, SEM Nintendo/SNES/Konami)
-    $Titulo = "$T1 $G1 x $G2 $T2 | $($Profile.NomeCompleto) | skimboll2001"
-    if ($Titulo.Length -gt 100) {
-        $Titulo = "$T1 $G1 x $G2 $T2 | $($Profile.NomeCurto) | skimboll2001"
+    if ($CustomTitle) {
+        $Titulo = $CustomTitle
+    } else {
+        $Titulo = "$T1 $G1 x $G2 $T2 | $($Profile.NomeCompleto) | skimboll2001"
+        if ($Titulo.Length -gt 100) {
+            $Titulo = "$T1 $G1 x $G2 $T2 | $($Profile.NomeCurto) | skimboll2001"
+        }
     }
 
     $TagT1 = Remove-Accents $T1
     $TagT2 = Remove-Accents $T2
-    $HashtagsPartida = "#${TagT1}x${TagT2} #$TagT1 #$TagT2 $($Profile.HashtagsBase)"
-
-    $ExtrasLine = ""
-    if ($Profile.Key -eq "ISSD") {
-        $ExtrasT1 = $IssdTeamKeywords[$TagT1]
-        $ExtrasT2 = $IssdTeamKeywords[$TagT2]
-        $ExtrasLine = (@($ExtrasT1, $ExtrasT2) | Where-Object { $_ }) -join ", "
+    if ($T2) {
+        $HashtagsPartida = "#${TagT1}x${TagT2} #$TagT1 #$TagT2 $($Profile.HashtagsBase)"
+        $LinhaTopo = "PARTIDA: $T1 vs $T2 | RESULTADO FINAL: $T1 $G1 x $G2 $T2"
+        $ConfrontoDesc = "$T1 x $T2"
+        $PlacarDesc = "$T1 $G1 x $G2 $T2"
+    } else {
+        $HashtagsPartida = "#$TagT1 #TrainingSession $($Profile.HashtagsBase)"
+        $LinhaTopo = "TREINO / GAMEPLAY: $T1 ($Modo) | $NomeJogo"
+        $ConfrontoDesc = "$T1 ($Modo)"
+        $PlacarDesc = $Modo
     }
+
+    $ExtrasT1 = $IssdTeamKeywords[$TagT1]
+    $ExtrasT2 = $IssdTeamKeywords[$TagT2]
+    $ExtrasLine = (@($ExtrasT1, $ExtrasT2) | Where-Object { $_ }) -join ", "
 
     $Star = [char]0x2605
     $LineSep = ([string][char]0x2501) * 34
 
     $LinhasDesc = @(
-        "PARTIDA: $T1 vs $T2 | RESULTADO FINAL: $T1 $G1 x $G2 $T2",
+        $LinhaTopo,
         "INSCREVA-SE NO CANAL SKIMBOLL2001: https://www.youtube.com/@skimboll2001?sub_confirmation=1",
-        "Deixe o Like e inscreva-se para acompanhar todas as partidas e torneios no canal Skimboll2001!",
+        "Deixe o Like e inscreva-se para acompanhar todas as partidas e torneios no canal Skimboll2001 (videos novos as 06:00 e as 17:30)!",
         "",
         $LineSep,
         "$Star FICHA DA PARTIDA & RESULTADO $Star",
         $LineSep,
-        "- Confronto: $T1 x $T2",
-        "- Placar Final: $T1 $G1 x $G2 $T2",
+        "- Confronto: $ConfrontoDesc",
+        "- Resultado / Modo: $PlacarDesc",
         "- Jogo / Versao: $NomeJogo",
         "- Torneio / Modo: $Modo",
         "- Canal: Skimboll2001 (Skimboll desde 2001 | seit 2001 | since 2001)",
@@ -322,18 +385,20 @@ function Build-MatchSeoData {
         $LineSep,
         "$Star PALAVRAS-CHAVE E TERMOS DE BUSCA (SEO) $Star",
         $LineSep,
-        "$T1 x $T2, $T1 vs $T2, $T1 $G1 x $G2 $T2, $T1 $G1 a $G2 $T2, $T1 $($Profile.NomeCompleto), $T2 $($Profile.NomeCompleto), $($Profile.SeoKeywords), $ExtrasLine, Skimboll2001, skimboll 2001.",
+        "$T1, $T2, $ConfrontoDesc, $PlacarDesc, $T1 $($Profile.NomeCompleto), $($Profile.SeoKeywords), $ExtrasLine, Skimboll2001, skimboll 2001.",
         "",
         $HashtagsPartida
     )
     $Descricao = $LinhasDesc -join "`r`n"
 
     $Tags = @(
-        "$T1 x $T2",
-        "$T1 vs $T2",
-        "$T1 $G1 x $G2 $T2",
+        $T1,
         "$T1 $($Profile.NomeCurto)"
-    ) + $Profile.TagsBase
+    )
+    if ($T2) {
+        $Tags += @("$T1 x $T2", "$T1 vs $T2", "$T1 $G1 x $G2 $T2")
+    }
+    $Tags += $Profile.TagsBase
 
     return @{
         Titulo    = $Titulo
@@ -362,25 +427,13 @@ function Get-FittedFont {
     return (New-Object System.Drawing.Font($FontFamily, $MinSize, [System.Drawing.FontStyle]::Bold))
 }
 
-function Draw-SkimbollOfficialBadge {
-    param(
-        [System.Drawing.Graphics]$Gfx,
-        [int]$X, [int]$Y, [int]$W, [int]$H
-    )
-    if (Test-Path $LogoPath) {
-        $LogoImg = [System.Drawing.Image]::FromFile((Resolve-Path $LogoPath).Path)
-        $Gfx.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::NearestNeighbor
-        $Gfx.DrawImage($LogoImg, $X, $Y, $W, $H)
-        $LogoImg.Dispose()
-    }
-}
-
 function New-MatchThumbnail {
     param(
         [hashtable]$Profile,
         [string]$T1, [string]$T2, [int]$G1, [int]$G2,
         [string]$Modo, [string]$OutPath,
-        [string]$ActionImgPath, [string]$ScoreboardImgPath
+        [string]$ActionImgPath, [string]$ScoreboardImgPath,
+        [string]$CustomBarText
     )
 
     Add-Type -AssemblyName System.Drawing
@@ -395,15 +448,12 @@ function New-MatchThumbnail {
     $ColorWhite      = [System.Drawing.Color]::FromArgb(255, 248, 249, 250)
     $ColorMuted      = [System.Drawing.Color]::FromArgb(255, 200, 205, 212)
     $ColorBarBg      = [System.Drawing.Color]::FromArgb(218, 12, 14, 18)
-    $ColorPillBg     = [System.Drawing.Color]::FromArgb(230, 28, 32, 40)
 
     $BrushSkimRed    = New-Object System.Drawing.SolidBrush($ColorSkimRed)
     $BrushSkimYellow = New-Object System.Drawing.SolidBrush($ColorSkimYellow)
     $BrushWhite      = New-Object System.Drawing.SolidBrush($ColorWhite)
     $BrushMuted      = New-Object System.Drawing.SolidBrush($ColorMuted)
     $BrushBarBg      = New-Object System.Drawing.SolidBrush($ColorBarBg)
-    $BrushPillBg     = New-Object System.Drawing.SolidBrush($ColorPillBg)
-    $BrushAccent     = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, $Profile.CorDestaque[0], $Profile.CorDestaque[1], $Profile.CorDestaque[2]))
 
     $PenYellowThin   = New-Object System.Drawing.Pen($ColorSkimYellow, 2)
     $PenSubtleBorder = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(180, 244, 230, 0), 2)
@@ -430,7 +480,8 @@ function New-MatchThumbnail {
         $ActionImgPath = $null
     }
     if (-not $ScoreboardImgPath) {
-        $CandidateScore = Join-Path $FramesDir "final_menos_10s.png"
+        $CandidateScore = Join-Path $FramesDir "final_menos_8s.png"
+        if (-not (Test-Path $CandidateScore)) { $CandidateScore = Join-Path $FramesDir "final_menos_10s.png" }
         if (Test-Path $CandidateScore) { $ScoreboardImgPath = $CandidateScore }
     } elseif ($ScoreboardImgPath -eq "none") {
         $ScoreboardImgPath = $null
@@ -448,7 +499,6 @@ function New-MatchThumbnail {
         $Gfx.DrawImage($ActImg, 0, 0, 1280, 720)
         $ActImg.Dispose()
     } else {
-        # Fundo tatico sobrio quando gerado como modelo sem video
         $GradBg = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
             (New-Object System.Drawing.Point(0, 0)),
             (New-Object System.Drawing.Point(1280, 720)),
@@ -466,7 +516,7 @@ function New-MatchThumbnail {
         $Gfx.DrawString($Profile.NomeCompleto, $FontWatermarkCenter, $BrushMuted, (New-Object System.Drawing.RectangleF(140, 280, 1000, 80)), $FormatCenter)
     }
 
-    # 2. MINIATURA DISCRETA DO PLACAR FINAL IN-GAME (Canto Inferior Direito, acima da barra: 300x220)
+    # 2. MINIATURA DISCRETA DO PLACAR FINAL IN-GAME (Canto Inferior Direito, acima da barra: 304x224)
     if ($ScoreboardImgPath -and (Test-Path $ScoreboardImgPath)) {
         $PipX = 958
         $PipY = 412
@@ -503,16 +553,20 @@ function New-MatchThumbnail {
     $Gfx.DrawString("S", $FontTriS, $BrushSkimYellow, (New-Object System.Drawing.RectangleF(22, 662, 48, 34)), $FormatCenter)
 
     # Confronto e Placar Limpos (Esquerda/Centro da barra)
-    $T1Upper = $T1.ToUpper()
-    $T2Upper = $T2.ToUpper()
-    $MatchString = "$T1Upper   $G1 x $G2   $T2Upper"
+    if ($CustomBarText) {
+        $MatchString = $CustomBarText.ToUpper()
+    } else {
+        $T1Upper = $T1.ToUpper()
+        $T2Upper = $T2.ToUpper()
+        $MatchString = "$T1Upper   $G1 x $G2   $T2Upper"
+    }
     $FontMatch = Get-FittedFont -Gfx $Gfx -Text $MatchString -FontFamily "Segoe UI" -MaxSize 28 -MinSize 18 -MaxWidth 740
     $Gfx.DrawString($MatchString, $FontMatch, $BrushWhite, (New-Object System.Drawing.RectangleF(88, $BarY, 750, $BarH)), $FormatLeft)
 
     # Identificacao Discreta do Jogo / ROMHACK na Direita da Barra
     $GameLabel = "$($Profile.NomeCurto)  •  SKIMBOLL2001"
-    $FontGame = Get-FittedFont -Gfx $Gfx -Text $GameLabel -FontFamily "Consolas" -MaxSize 18 -MinSize 13 -MaxWidth 410
-    $Gfx.DrawString($GameLabel, $FontGame, $BrushSkimYellow, (New-Object System.Drawing.RectangleF(840, $BarY, 420, $BarH)), $FormatRight)
+    $FontGame = Get-FittedFont -Gfx $Gfx -Text $GameLabel -FontFamily "Consolas" -MaxSize 17 -MinSize 12 -MaxWidth 470
+    $Gfx.DrawString($GameLabel, $FontGame, $BrushSkimYellow, (New-Object System.Drawing.RectangleF(770, $BarY, 490, $BarH)), $FormatRight)
 
     $Bmp.Save($OutPath, [System.Drawing.Imaging.ImageFormat]::Png)
     $Gfx.Dispose()
@@ -520,6 +574,15 @@ function New-MatchThumbnail {
 }
 
 switch ($Acao) {
+    "ListarAgenda" {
+        if (Test-Path $AgendaPath) {
+            Get-Content $AgendaPath -Raw -Encoding UTF8 | ConvertFrom-Json | Format-Table videoId, status, publishAt, titulo -AutoSize
+        } else {
+            Write-Host "Nenhum video registrado em agenda-publicacoes.json ainda." -ForegroundColor Yellow
+        }
+        return
+    }
+
     "ExtrairFrames" {
         $VideoFile = Resolve-TargetVideo $ArquivoVideo
         Invoke-ExtractMatchFrames $VideoFile
@@ -532,8 +595,8 @@ switch ($Acao) {
         if (-not $ArquivoThumb) {
             $ArquivoThumb = Join-Path $ThumbsDir "thumb-ultima-partida.png"
         }
-        New-MatchThumbnail -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -OutPath $ArquivoThumb -ActionImgPath $ImagemLance -ScoreboardImgPath $ImagemPlacar
-        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom
+        New-MatchThumbnail -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -OutPath $ArquivoThumb -ActionImgPath $ImagemLance -ScoreboardImgPath $ImagemPlacar -CustomBarText $TextoBarraCustom
+        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom -CustomTitle $TituloCustom
         $DescPath = Join-Path $PSScriptRoot "..\descricao-video.txt"
         [System.IO.File]::WriteAllText($DescPath, $Seo.Descricao, (New-Object System.Text.UTF8Encoding($false)))
         Write-Host "Thumbnail ($($Profile.NomeCompleto)) gerada em: $ArquivoThumb" -ForegroundColor Green
@@ -544,28 +607,24 @@ switch ($Acao) {
     "GerarModelosJogos" {
         New-Item -ItemType Directory -Force -Path $ThumbsDir | Out-Null
 
-        # 1. Modelo ISSD Normal
         $P1 = Get-GameProfile -InputJogo "ISSD" -InputAno "" -InputRom "" -VideoFileName ""
         $OutIssd = Join-Path $ThumbsDir "modelo-thumb-ISSD.png"
         New-MatchThumbnail -Profile $P1 -T1 "Alemanha" -T2 "Japão" -G1 3 -G2 0 -Modo "International Cup Deluxe" -OutPath $OutIssd
         Copy-Item $OutIssd (Join-Path $ThumbsDir "thumb-ultima-partida.png") -Force
 
-        # 2. Modelo eFootball
         $P2 = Get-GameProfile -InputJogo "eFootball" -InputAno "" -InputRom "" -VideoFileName ""
         $OutEf = Join-Path $ThumbsDir "modelo-thumb-eFootball.png"
         New-MatchThumbnail -Profile $P2 -T1 "Brasil" -T2 "Argentina" -G1 2 -G2 1 -Modo "eFootball International Cup" -OutPath $OutEf -ActionImgPath "none" -ScoreboardImgPath "none"
 
-        # 3. Modelo EAFC
         $P3 = Get-GameProfile -InputJogo "EAFC" -InputAno "" -InputRom "" -VideoFileName ""
         $OutEafc = Join-Path $ThumbsDir "modelo-thumb-EAFC.png"
         New-MatchThumbnail -Profile $P3 -T1 "Real Madrid" -T2 "Bayern" -G1 3 -G2 2 -Modo "Champions Tournament" -OutPath $OutEafc -ActionImgPath "none" -ScoreboardImgPath "none"
 
-        # 4. Modelo FIFA
         $P4 = Get-GameProfile -InputJogo "FIFA" -InputAno "" -InputRom "" -VideoFileName ""
         $OutFifa = Join-Path $ThumbsDir "modelo-thumb-FIFA.png"
         New-MatchThumbnail -Profile $P4 -T1 "França" -T2 "Itália" -G1 1 -G2 0 -Modo "World Cup Classic" -OutPath $OutFifa -ActionImgPath "none" -ScoreboardImgPath "none"
 
-        Write-Host "Todos os modelos de Thumbnails foram gerados (sem referencias a Nintendo/Konami) em: $ThumbsDir" -ForegroundColor Green
+        Write-Host "Todos os modelos de Thumbnails foram gerados em: $ThumbsDir" -ForegroundColor Green
         Get-ChildItem $ThumbsDir -Filter "*.png" | Select-Object Name, Length
         return
     }
@@ -678,7 +737,7 @@ switch ($Acao) {
         if (-not $VideoId) { throw "Informe -VideoId para atualizar." }
         $Profile = Get-GameProfile -InputJogo $Jogo -InputAno $Ano -InputRom $VersaoRom -VideoFileName $ArquivoVideo
         $Token = Get-AccessToken
-        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom
+        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom -CustomTitle $TituloCustom
 
         $DescPath = Join-Path $PSScriptRoot "..\descricao-video.txt"
         [System.IO.File]::WriteAllText($DescPath, $Seo.Descricao, (New-Object System.Text.UTF8Encoding($false)))
@@ -709,8 +768,8 @@ switch ($Acao) {
 
         if (-not $ArquivoThumb -or -not (Test-Path $ArquivoThumb)) {
             $ArquivoThumb = Join-Path $ThumbsDir "thumb-ultima-partida.png"
-            Write-Host "Gerando thumbnail 1280x720 ($($Profile.NomeCurto) : $Time1 $Gols1 x $Gols2 $Time2)..." -ForegroundColor Yellow
-            New-MatchThumbnail -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -OutPath $ArquivoThumb -ActionImgPath $ImagemLance -ScoreboardImgPath $ImagemPlacar
+            Write-Host "Gerando thumbnail 1280x720 ($($Profile.NomeCurto))..." -ForegroundColor Yellow
+            New-MatchThumbnail -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -OutPath $ArquivoThumb -ActionImgPath $ImagemLance -ScoreboardImgPath $ImagemPlacar -CustomBarText $TextoBarraCustom
         }
 
         Write-Host "Aplicando thumbnail no video $VideoId..." -ForegroundColor Cyan
@@ -735,16 +794,30 @@ switch ($Acao) {
         $VideoFile = Resolve-TargetVideo $ArquivoVideo
         $Profile = Get-GameProfile -InputJogo $Jogo -InputAno $Ano -InputRom $VersaoRom -VideoFileName $VideoFile.Name
 
-        Invoke-ExtractMatchFrames $VideoFile
+        if ($AgendarProximoSlot -and -not $DataPublicacao) {
+            $DataPublicacao = Get-NextScheduleSlot
+        }
 
         $Token = Get-AccessToken
         $Canal = Invoke-RestMethod -Uri "https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true" -Headers @{ Authorization = "Bearer $Token" }
         Write-Host "Publicando ($($Profile.NomeCompleto)) no canal: $($Canal.items[0].snippet.title) ($($Canal.items[0].id))" -ForegroundColor Cyan
 
-        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom
+        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom -CustomTitle $TituloCustom
 
         $DescPath = Join-Path $PSScriptRoot "..\descricao-video.txt"
         [System.IO.File]::WriteAllText($DescPath, $Seo.Descricao, (New-Object System.Text.UTF8Encoding($false)))
+
+        $StatusObj = @{
+            selfDeclaredMadeForKids = $false
+        }
+        if ($DataPublicacao) {
+            # Para agendamento no YouTube Data API v3, privacyStatus DEVE ser "private" + publishAt (ISO 8601)
+            $StatusObj["privacyStatus"] = "private"
+            $StatusObj["publishAt"]     = $DataPublicacao
+            Write-Host "Agendando publicacao automatica no YouTube para: $DataPublicacao" -ForegroundColor Magenta
+        } else {
+            $StatusObj["privacyStatus"] = $Privacidade
+        }
 
         $MetadataObj = @{
             snippet = @{
@@ -755,10 +828,7 @@ switch ($Acao) {
                 defaultLanguage      = "pt-BR"
                 defaultAudioLanguage = "pt-BR"
             }
-            status  = @{
-                privacyStatus           = $Privacidade
-                selfDeclaredMadeForKids = $false
-            }
+            status  = $StatusObj
         }
 
         $MetadataJson = $MetadataObj | ConvertTo-Json -Depth 6 -Compress
@@ -792,7 +862,7 @@ switch ($Acao) {
         Write-Host "2/3 Enviando video '$($VideoFile.Name)' ($SizeMB MB) via curl.exe streaming..." -ForegroundColor Yellow
 
         $ResultFile = Join-Path $PSScriptRoot "..\.secrets\temp-result.json"
-        & curl.exe -s -S -X PUT $UploadUrl `
+        & curl.exe -g -s -S -X PUT $UploadUrl `
             -H "Authorization: Bearer $Token" `
             -H "Content-Type: video/x-matroska" `
             -T $VideoFile.FullName `
@@ -808,8 +878,8 @@ switch ($Acao) {
 
         if (-not $ArquivoThumb -or -not (Test-Path $ArquivoThumb)) {
             $ArquivoThumb = Join-Path $ThumbsDir "thumb-ultima-partida.png"
-            Write-Host "3/3 Gerando thumbnail automatica ($($Profile.NomeCurto) : $Time1 $Gols1 x $Gols2 $Time2)..." -ForegroundColor Yellow
-            New-MatchThumbnail -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -OutPath $ArquivoThumb -ActionImgPath $ImagemLance -ScoreboardImgPath $ImagemPlacar
+            Write-Host "3/3 Gerando thumbnail automatica ($($Profile.NomeCurto))..." -ForegroundColor Yellow
+            New-MatchThumbnail -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -OutPath $ArquivoThumb -ActionImgPath $ImagemLance -ScoreboardImgPath $ImagemPlacar -CustomBarText $TextoBarraCustom
         }
 
         Write-Host "Aplicando thumbnail no video $($VideoResp.id)..." -ForegroundColor Cyan
@@ -822,11 +892,14 @@ switch ($Acao) {
         $ThumbResRaw = Get-Content $ThumbResFile -Raw -ErrorAction SilentlyContinue
         Remove-Item $ThumbResFile -Force -ErrorAction SilentlyContinue
 
+        $StatusFinal = if ($DataPublicacao) { "scheduled ($DataPublicacao)" } else { $Privacidade }
+        Save-AgendaEntry -VideoId $VideoResp.id -Titulo $Seo.Titulo -Arquivo $VideoFile.Name -Status $StatusFinal -PublishAt $DataPublicacao
+
         Write-Host "======================================================" -ForegroundColor Green
-        Write-Host "VIDEO PUBLICADO COM SUCESSO!" -ForegroundColor Green
+        Write-Host "VIDEO ENVIADO COM SUCESSO!" -ForegroundColor Green
         Write-Host "Canal    : $($Canal.items[0].snippet.title)" -ForegroundColor Cyan
-        Write-Host "Jogo     : $($Profile.NomeCompleto)" -ForegroundColor White
-        Write-Host "Partida  : $Time1 $Gols1 x $Gols2 $Time2" -ForegroundColor Yellow
+        Write-Host "Titulo   : $($Seo.Titulo)" -ForegroundColor White
+        Write-Host "Status   : $StatusFinal" -ForegroundColor Yellow
         Write-Host "ID       : $($VideoResp.id)" -ForegroundColor White
         Write-Host "Link     : https://youtu.be/$($VideoResp.id)" -ForegroundColor Cyan
         Write-Host "Studio   : https://studio.youtube.com/video/$($VideoResp.id)/edit" -ForegroundColor Yellow

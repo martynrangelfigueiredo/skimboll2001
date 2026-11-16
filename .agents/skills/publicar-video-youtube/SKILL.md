@@ -1,54 +1,61 @@
 ---
 name: publicar-video-youtube
 description: >-
-  Use esta skill sempre que o usuário pedir para postar, subir, atualizar ou
-  preparar um vídeo de gameplay no YouTube para o canal Skimboll2001 (ISSD,
+  Use esta skill sempre que o usuário pedir para postar, subir, agendar, atualizar ou
+  preparar vídeos de gameplay no YouTube para o canal Skimboll2001 (ISSD,
   ROMHACKs de ISSD, eFootball, EAFC ou FIFA). Ensina como extrair o placar dos
   últimos segundos do vídeo, identificar a ROMHACK, gerar a thumbnail e publicar
-  sem mencionar Nintendo ou Konami.
+  ou agendar nos horários fixos (06:00 e 17:30) sem mencionar Nintendo ou Konami.
 ---
 
-# Publicar Vídeo no YouTube — Canal Skimboll2001
+# Publicar e Agendar Vídeos no YouTube — Canal Skimboll2001
 
-Siga este procedimento passo a passo sempre que o usuário colocar um vídeo novo no repositório ou pedir para postar/atualizar uma partida no YouTube.
+Siga este procedimento passo a passo sempre que o usuário colocar vídeos novos no repositório ou pedir para postar/agendar partidas no YouTube.
 
 ## ⚠️ Regra de Ouro (Restrição de Marcas)
 **JAMAIS** escreva `Nintendo`, `Super Nintendo`, `SNES`, `Super Famicom` ou `Konami` no título, na descrição, nas tags, nas hashtags ou na thumbnail.
 
+## ⏰ Regra de Agendamento (06:00 e 17:30)
+- A agenda oficial do canal publica vídeos sempre às **06:00** e às **17:30** (horário de Brasília `-03:00`).
+- O agendamento é feito nativamente na API do YouTube (`status.privacyStatus = "private"` + `status.publishAt = "YYYY-MM-DDTHH:mm:ss-03:00"`), de modo que o próprio YouTube libera o vídeo no horário exato mesmo com o computador desligado.
+- Para agendar automaticamente no próximo slot livre (`06:00` ou `17:30`) após o último vídeo agendado em `agenda-publicacoes.json`, basta passar a flag `-AgendarProximoSlot` (ou `-DataPublicacao "YYYY-MM-DDTHH:mm:ss-03:00"`).
+
 ## Passo 1: Localizar o Vídeo e Extrair os Quadros Finais (`ffmpeg`)
-1. Se o usuário deixou o arquivo `.mkv` ou `.mp4` na raiz do projeto, mova-o para a pasta `videos/`:
+1. Se o usuário deixou o arquivo `.mkv` ou `.mp4` na raiz do projeto, mova-o para a pasta `videos/`.
+2. Extraia os quadros da partida e os últimos segundos do vídeo (onde aparece o placar final):
    ```powershell
-   Move-Item -Path ".\*.mkv", ".\*.mp4" -Destination ".\videos\" -Force -ErrorAction SilentlyContinue
-   ```
-2. Extraia automaticamente os quadros da partida e os últimos segundos do vídeo (onde aparece o placar final):
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File .\scripts\youtube.ps1 -Acao ExtrairFrames
+   powershell -ExecutionPolicy Bypass -File .\scripts\youtube.ps1 -Acao ExtrairFrames -ArquivoVideo ".\videos\nome-do-video.mkv"
    ```
 
 ## Passo 2: Ler o Placar Final e Identificar os Times e o Jogo
-1. Use a ferramenta `read_file` para visualizar as imagens geradas em `.secrets/frames/`:
-   - Veja `final_menos_10s.png`, `final_menos_6s.png` ou `final_menos_3s.png` para ler o **Placar Final** (ex: `GERMANY 3 - 0 JAPAN`) e estatísticas.
-   - Veja `lance_partida.png` (ou `lance_120s.png` / `lance_540s.png`) para conferir o visual do campo e o HUD da partida.
+1. Use `read_file` para visualizar as imagens geradas em `.secrets/frames/`:
+   - Veja `final_menos_8s.png`, `final_menos_5s.png` ou `final_menos_10s.png` para ler o **Placar Final** e estatísticas.
+   - Veja `lance_partida.png` para conferir o visual do campo e o HUD da partida.
 2. Identifique qual jogo ou **ROMHACK** está sendo jogado consultando o [Catálogo de Jogos e ROMHACKs](./references/catalogo-jogos-e-roms.md).
-3. Traduza os nomes das seleções para o português no título e na descrição (ex: `Germany` → `Alemanha`, `Japan` → `Japão`), mantendo os termos em inglês no bloco de SEO.
 
-## Passo 3: Publicar (ou Atualizar) o Vídeo via API
-Execute `scripts/youtube.ps1` passando `-Jogo`, `-Ano` (se aplicável à ROMHACK), `-Time1`, `-Time2`, `-Gols1` e `-Gols2`:
+## Passo 3: Publicar Imediatamente ou Agendar no Próximo Slot (06:00 / 17:30)
+- **Para postar imediatamente (`public`):**
+  ```powershell
+  powershell -ExecutionPolicy Bypass -File .\scripts\youtube.ps1 `
+    -Acao PostarVideo `
+    -ArquivoVideo ".\videos\partida.mkv" `
+    -Jogo "ISSD Champions League" -Ano "2026" `
+    -Time1 "Borussia Dortmund" -Time2 "Bayern de Munique" -Gols1 0 -Gols2 0 `
+    -Privacidade "public"
+  ```
+- **Para agendar no próximo horário disponível (`06:00` ou `17:30`):**
+  ```powershell
+  powershell -ExecutionPolicy Bypass -File .\scripts\youtube.ps1 `
+    -Acao PostarVideo `
+    -ArquivoVideo ".\videos\partida.mkv" `
+    -Jogo "ISSD Ronaldinho Soccer" -Ano "99" `
+    -Time1 "Brasil 99" -Time2 "França 98" -Gols1 1 -Gols2 0 `
+    -AgendarProximoSlot
+  ```
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\youtube.ps1 `
-  -Acao PostarVideo `
-  -Jogo "ISSD" `
-  -Ano "" `
-  -Time1 "Alemanha" `
-  -Time2 "Japão" `
-  -Gols1 3 `
-  -Gols2 0 `
-  -ModoJogo "International Cup Deluxe" `
-  -Privacidade "public"
-```
-*(Nota: Para o envio à internet via API do YouTube, execute o comando com `BypassSandbox: true` caso o modo sandbox bloqueie a resolução DNS de `oauth2.googleapis.com`).*
-
-## Passo 4: Validar e Fazer Commit/Push
-1. Verifique se o script retornou `VIDEO PUBLICADO COM SUCESSO!` com o link `https://youtu.be/<ID>` e `Thumbnail aplicada com sucesso!`.
-2. Faça `git add`, `git commit` e `git push` de quaisquer atualizações nos templates ou metadados (garantindo que `videos/` e `.secrets/` continuem fora do Git).
+## Passo 4: Validar Agenda e Fazer Commit/Push
+1. Confira a fila agendada com:
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\scripts\youtube.ps1 -Acao ListarAgenda
+   ```
+2. Faça `git add`, `git commit` e `git push` das atualizações em `agenda-publicacoes.json` e templates.
