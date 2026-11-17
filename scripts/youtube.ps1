@@ -8,7 +8,7 @@
 
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet("Login", "Status", "AtualizarCanal", "ExtrairFrames", "PostarVideo", "AtualizarVideo", "GerarThumb", "GerarModelosJogos", "ListarAgenda")]
+    [ValidateSet("Login", "Status", "AtualizarCanal", "ExtrairFrames", "PostarVideo", "AtualizarVideo", "DeletarVideo", "GerarThumb", "GerarModelosJogos", "ListarAgenda")]
     [string]$Acao,
 
     [string]$Jogo = "Auto",
@@ -297,10 +297,15 @@ function Optimize-VideoForYouTube {
         [System.IO.FileInfo]$InputVideo,
         [string]$TargetQuality = "1440p"
     )
-    if ($TargetQuality -eq "Original") { return $InputVideo }
+    if ($TargetQuality -eq "Original" -or $InputVideo.Name -match "_(1440p|1080p)60_HD\.mp4$") {
+        return $InputVideo
+    }
 
     $FfmpegExe = Find-Ffmpeg
+    $OldEap = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
     $ProbeOut = (& $FfmpegExe -i $InputVideo.FullName 2>&1 | Out-String)
+    $ErrorActionPreference = $OldEap
     $Width = 0; $Height = 0
     if ($ProbeOut -match "Stream #\d+:\d+.*Video:.*,\s*(\d+)x(\d+)") {
         $Width  = [int]$Matches[1]
@@ -336,8 +341,8 @@ function Optimize-VideoForYouTube {
         -i $InputVideo.FullName `
         -vf "scale=${OutRes}:flags=neighbor,format=nv12" `
         -r 60 `
-        -c:v h264_qsv -global_quality 21 -look_ahead 0 `
-        -c:a aac -b:a 320k -ar 48000 `
+        -c:v h264_qsv -global_quality 25 -look_ahead 0 `
+        -c:a aac -b:a 192k -ar 48000 `
         -movflags +faststart `
         $OutFilePath
 
@@ -776,6 +781,14 @@ switch ($Acao) {
         $Info = $Canal.items[0]
         Write-Host "Canal conectado: $($Info.snippet.title) (ID: $($Info.id))" -ForegroundColor Cyan
         Write-Host "Inscritos: $($Info.statistics.subscriberCount) | Videos: $($Info.statistics.videoCount)" -ForegroundColor Yellow
+    }
+
+    "DeletarVideo" {
+        if (-not $VideoId) { throw "Informe -VideoId para deletar." }
+        $Token = Get-AccessToken
+        & curl.exe -s -S -X DELETE "https://www.googleapis.com/youtube/v3/videos?id=$VideoId" `
+            -H "Authorization: Bearer $Token"
+        Write-Host "Video antigo ($VideoId) removido do YouTube com sucesso!" -ForegroundColor Yellow
     }
 
     "AtualizarCanal" {
