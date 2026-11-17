@@ -15,6 +15,10 @@ Siga este procedimento passo a passo sempre que o usuário colocar vídeos novos
 ## ⚠️ Regra de Ouro (Restrição de Marcas)
 **JAMAIS** escreva `Nintendo`, `Super Nintendo`, `SNES`, `Super Famicom` ou `Konami` no título, na descrição, nas tags, nas hashtags ou na thumbnail.
 
+## 🎬 Qualidade Máxima Automática (`1440p60` 2K Pixel-Perfect)
+- Gravações brutas de emuladores 16-bit costumam vir em `256x224`, o que faria o YouTube travar o vídeo em `240p` borrado.
+- O `scripts/youtube.ps1` possui a função `Optimize-VideoForYouTube` (ativa por padrão com `-QualidadeUpload "1440p"`), que detecta vídeos abaixo de `1080p` e faz o **upscale automático para `2560x1440` a 60fps (`1440p60` 2K)** usando `scale=2560:1440:flags=neighbor` (Nearest-Neighbor Pixel-Perfect, mantendo cada pixel 100% nítido sem borrar) e aceleração de hardware (`h264_qsv`), forçando o codec **VP9** de alta taxa de bits no YouTube.
+
 ## ⏰ Regra de Agendamento (06:00 e 17:30)
 - A agenda oficial do canal publica vídeos sempre às **06:00** e às **17:30** (horário de Brasília `-03:00`).
 - O agendamento é feito nativamente na API do YouTube (`status.privacyStatus = "private"` + `status.publishAt = "YYYY-MM-DDTHH:mm:ss-03:00"`), de modo que o próprio YouTube libera o vídeo no horário exato mesmo com o computador desligado.

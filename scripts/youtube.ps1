@@ -30,6 +30,8 @@ param(
     [string]$TituloCustom = "",         # Opcional para treinos/especiais
     [string]$TextoBarraCustom = "",     # Opcional para barra inferior da thumb
     [string]$NotaExtra = "",            # Nota adicional em destaque no topo da descricao
+    [ValidateSet("1080p", "1440p", "Original")]
+    [string]$QualidadeUpload = "1440p", # Upscale Pixel-Perfect (NearestNeighbor) automatico para 1440p60 (VP9) ou 1080p60
     [string]$ArquivoThumb,
     [string]$ImagemLance,
     [string]$ImagemPlacar
@@ -288,6 +290,70 @@ function Find-Ffmpeg {
         Select-Object -ExpandProperty FullName -First 1
     if ($wingetPath) { return $wingetPath }
     throw "ffmpeg nao encontrado. Instale com: winget install Gyan.FFmpeg"
+}
+
+function Optimize-VideoForYouTube {
+    param(
+        [System.IO.FileInfo]$InputVideo,
+        [string]$TargetQuality = "1440p"
+    )
+    if ($TargetQuality -eq "Original") { return $InputVideo }
+
+    $FfmpegExe = Find-Ffmpeg
+    $ProbeOut = (& $FfmpegExe -i $InputVideo.FullName 2>&1 | Out-String)
+    $Width = 0; $Height = 0
+    if ($ProbeOut -match "Stream #\d+:\d+.*Video:.*,\s*(\d+)x(\d+)") {
+        $Width  = [int]$Matches[1]
+        $Height = [int]$Matches[2]
+    }
+
+    # Se o video ja estiver em 1080p ou superior, nao precisa recodificar
+    if ($Height -ge 1080) {
+        Write-Host "Video ja esta em alta resolucao (${Width}x${Height}). Mantendo arquivo original." -ForegroundColor Green
+        return $InputVideo
+    }
+
+    $OutRes = if ($TargetQuality -eq "1440p") { "2560:1440" } else { "1920:1080" }
+    $OutFileName = "$($InputVideo.BaseName)_${TargetQuality}60_HD.mp4"
+    $OutFilePath = Join-Path $InputVideo.DirectoryName $OutFileName
+
+    if (Test-Path $OutFilePath) {
+        $Existing = Get-Item $OutFilePath
+        if ($Existing.Length -gt 10MB) {
+            Write-Host "Arquivo otimizado em $TargetQuality60 ja existe: $($Existing.Name) ($([math]::Round($Existing.Length / 1MB, 2)) MB)" -ForegroundColor Green
+            return $Existing
+        }
+    }
+
+    Write-Host "==================================================================" -ForegroundColor Magenta
+    Write-Host "OTIMIZANDO QUALIDADE DE VIDEO PARA YOUTUBE ($TargetQuality 60FPS PIXEL-PERFECT)" -ForegroundColor Magenta
+    Write-Host "Origem : $($InputVideo.Name) (${Width}x${Height} -> causava 240p no YouTube)" -ForegroundColor Yellow
+    Write-Host "Destino: $OutFileName ($OutRes @ 60fps com filtro NearestNeighbor nítido)" -ForegroundColor Cyan
+    Write-Host "==================================================================" -ForegroundColor Magenta
+
+    # Usa aceleracao de hardware Intel Quick Sync (h264_qsv) com fallback automatico para libx264
+    & $FfmpegExe -y -loglevel warning -stats `
+        -i $InputVideo.FullName `
+        -vf "scale=${OutRes}:flags=neighbor,format=nv12" `
+        -r 60 `
+        -c:v h264_qsv -global_quality 21 -look_ahead 0 `
+        -c:a aac -b:a 320k -ar 48000 `
+        -movflags +faststart `
+        $OutFilePath
+
+    if ($LASTEXITCODE -ne 0 -or -not (Test-Path $OutFilePath)) {
+        Write-Host "Usando encoder CPU libx264 superfast..." -ForegroundColor Yellow
+        & $FfmpegExe -y -loglevel warning -stats `
+            -i $InputVideo.FullName `
+            -vf "scale=${OutRes}:flags=neighbor,format=yuv420p" `
+            -r 60 `
+            -c:v libx264 -preset superfast -crf 19 `
+            -c:a aac -b:a 320k -ar 48000 `
+            -movflags +faststart `
+            $OutFilePath
+    }
+
+    return (Get-Item $OutFilePath)
 }
 
 function Invoke-ExtractMatchFrames([System.IO.FileInfo]$VideoFile) {
@@ -803,8 +869,12 @@ switch ($Acao) {
     }
 
     "PostarVideo" {
-        $VideoFile = Resolve-TargetVideo $ArquivoVideo
-        $Profile = Get-GameProfile -InputJogo $Jogo -InputAno $Ano -InputRom $VersaoRom -VideoFileName $VideoFile.Name
+        $RawVideoFile = Resolve-TargetVideo $ArquivoVideo
+        $Profile = Get-GameProfile -InputJogo $Jogo -InputAno $Ano -InputRom $VersaoRom -VideoFileName $RawVideoFile.Name
+
+        # Otimizar automaticamente videos de baixa resolucao (ex: 256x224) para 1440p60/1080p60 Pixel-Perfect antes do upload!
+        $VideoFile = Optimize-VideoForYouTube -InputVideo $RawVideoFile -TargetQuality $QualidadeUpload
+        $MimeType = if ($VideoFile.Extension -match "(?i)mp4") { "video/mp4" } else { "video/x-matroska" }
 
         if ($AgendarProximoSlot -and -not $DataPublicacao) {
             $DataPublicacao = Get-NextScheduleSlot
@@ -856,7 +926,7 @@ switch ($Acao) {
             -H "Authorization: Bearer $Token" `
             -H "Content-Type: application/json; charset=UTF-8" `
             -H "X-Upload-Content-Length: $($VideoFile.Length)" `
-            -H "X-Upload-Content-Type: video/x-matroska" `
+            -H "X-Upload-Content-Type: $MimeType" `
             --data-binary "@$TempMetaFile"
 
         Remove-Item $TempMetaFile -Force -ErrorAction SilentlyContinue
@@ -876,7 +946,7 @@ switch ($Acao) {
         $ResultFile = Join-Path $PSScriptRoot "..\.secrets\temp-result.json"
         & curl.exe -g -s -S -X PUT $UploadUrl `
             -H "Authorization: Bearer $Token" `
-            -H "Content-Type: video/x-matroska" `
+            -H "Content-Type: $MimeType" `
             -T $VideoFile.FullName `
             -o $ResultFile
 
