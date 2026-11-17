@@ -29,6 +29,7 @@ param(
     [switch]$AgendarProximoSlot,        # Calcula automaticamente o proximo slot 06:00 ou 17:30
     [string]$TituloCustom = "",         # Opcional para treinos/especiais
     [string]$TextoBarraCustom = "",     # Opcional para barra inferior da thumb
+    [string]$NotaExtra = "",            # Nota adicional em destaque no topo da descricao
     [string]$ArquivoThumb,
     [string]$ImagemLance,
     [string]$ImagemPlacar
@@ -250,6 +251,8 @@ function Get-GameProfile {
 }
 
 $IssdTeamKeywords = @{
+    "China"           = "China, Sun Hao, Liu Kun, Luo Ning, Selecao Chinesa, Team China, ISSD Extended"
+    "Islandia"        = "Iceland, Islandia, Magnus, Bjarni, Selecao Islandesa, ISSD Extended"
     "Brasil"          = "Brazil, Allejo, Gomez, Beranco, Pardilla, Ferreira, Cicero, Roca, Santos, Silva, Ronaldo, Rivaldo, Roberto Carlos"
     "Brasil99"        = "Brazil 1999, Brasil 99, Ronaldo, Rivaldo, Christian, Roberto Carlos, Cafu, Dida, Emerson, Ze Roberto"
     "Franca98"        = "France 1998, Franca 98, Zidane, Deschamps, Henry, Trezeguet, Barthez, Blanc, Thuram, Petit, Vieira"
@@ -327,7 +330,7 @@ function Remove-Accents([string]$Text) {
 
 function Build-MatchSeoData {
     param(
-        [hashtable]$Profile, [string]$T1, [string]$T2, [int]$G1, [int]$G2, [string]$Modo, [string]$Rom, [string]$CustomTitle
+        [hashtable]$Profile, [string]$T1, [string]$T2, [int]$G1, [int]$G2, [string]$Modo, [string]$Rom, [string]$CustomTitle, [string]$ExtraNote
     )
 
     $NomeJogo = if ($Rom) { $Rom } else { $Profile.NomeCompleto }
@@ -364,7 +367,16 @@ function Build-MatchSeoData {
 
     $LinhasDesc = @(
         $LinhaTopo,
-        "INSCREVA-SE NO CANAL SKIMBOLL2001: https://www.youtube.com/@skimboll2001?sub_confirmation=1",
+        "INSCREVA-SE NO CANAL SKIMBOLL2001: https://www.youtube.com/@skimboll2001?sub_confirmation=1"
+    )
+    if ($ExtraNote) {
+        $LinhasDesc += @(
+            "",
+            "AVISO IMPORTANTE (PROJETO EM DESENVOLVIMENTO):",
+            $ExtraNote
+        )
+    }
+    $LinhasDesc += @(
         "Deixe o Like e inscreva-se para acompanhar todas as partidas e torneios no canal Skimboll2001 (videos novos as 06:00 e as 17:30)!",
         "",
         $LineSep,
@@ -596,7 +608,7 @@ switch ($Acao) {
             $ArquivoThumb = Join-Path $ThumbsDir "thumb-ultima-partida.png"
         }
         New-MatchThumbnail -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -OutPath $ArquivoThumb -ActionImgPath $ImagemLance -ScoreboardImgPath $ImagemPlacar -CustomBarText $TextoBarraCustom
-        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom -CustomTitle $TituloCustom
+        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom -CustomTitle $TituloCustom -ExtraNote $NotaExtra
         $DescPath = Join-Path $PSScriptRoot "..\descricao-video.txt"
         [System.IO.File]::WriteAllText($DescPath, $Seo.Descricao, (New-Object System.Text.UTF8Encoding($false)))
         Write-Host "Thumbnail ($($Profile.NomeCompleto)) gerada em: $ArquivoThumb" -ForegroundColor Green
@@ -737,7 +749,7 @@ switch ($Acao) {
         if (-not $VideoId) { throw "Informe -VideoId para atualizar." }
         $Profile = Get-GameProfile -InputJogo $Jogo -InputAno $Ano -InputRom $VersaoRom -VideoFileName $ArquivoVideo
         $Token = Get-AccessToken
-        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom -CustomTitle $TituloCustom
+        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom -CustomTitle $TituloCustom -ExtraNote $NotaExtra
 
         $DescPath = Join-Path $PSScriptRoot "..\descricao-video.txt"
         [System.IO.File]::WriteAllText($DescPath, $Seo.Descricao, (New-Object System.Text.UTF8Encoding($false)))
@@ -802,7 +814,7 @@ switch ($Acao) {
         $Canal = Invoke-RestMethod -Uri "https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true" -Headers @{ Authorization = "Bearer $Token" }
         Write-Host "Publicando ($($Profile.NomeCompleto)) no canal: $($Canal.items[0].snippet.title) ($($Canal.items[0].id))" -ForegroundColor Cyan
 
-        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom -CustomTitle $TituloCustom
+        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom -CustomTitle $TituloCustom -ExtraNote $NotaExtra
 
         $DescPath = Join-Path $PSScriptRoot "..\descricao-video.txt"
         [System.IO.File]::WriteAllText($DescPath, $Seo.Descricao, (New-Object System.Text.UTF8Encoding($false)))
