@@ -108,7 +108,7 @@ function Get-GameProfile {
 
     $Combined = "$InputJogo $InputRom $VideoFileName".Trim()
     $AnoFinal = $InputAno
-    if (-not $AnoFinal -and $Combined -match "\b(199[5-9]|20[0-2][0-9]|9[5-9]|2[4-9])\b") {
+    if (-not $AnoFinal -and $Combined -match "\b(20[0-2][0-9]-[0-9]{2}|199[5-9]|20[0-2][0-9]|9[5-9]|2[4-9])\b") {
         $AnoFinal = $Matches[1]
     }
     $SufixoAno = if ($AnoFinal) { " $AnoFinal" } else { "" }
@@ -158,84 +158,96 @@ function Get-GameProfile {
         }
     }
 
-    $NomeCurto    = "ISS DELUXE • 16-BIT"
-    $NomeCompleto = "International Superstar Soccer Deluxe"
-    $SubThumb     = "INTERNATIONAL CUP DELUXE • 16-BIT"
-    $ExtraSeo     = "International Superstar Soccer Deluxe, ISS Deluxe, ISSD, ninjaissd, angelo salles, international cup deluxe tournaments, Futebol 16-bit, Retro Gaming"
-    $ExtraHash    = "#ISSDeluxe #ISSD #InternationalSuperstarSoccerDeluxe #ninjaissd #InternationalCupDeluxe #skimboll2001 #FutebolRetro #16Bit"
-    $ExtraTags    = @("International Superstar Soccer Deluxe", "ISS Deluxe", "ISSD", "ninjaissd", "angelo salles", "international cup deluxe", "skimboll2001", "Futebol Retro", "16-bit")
+    $NomeCurto     = "ISS DELUXE • 16-BIT"
+    $NomeCompleto  = "International Superstar Soccer Deluxe"
+    $SubThumb      = "INTERNATIONAL CUP DELUXE • 16-BIT"
+    $BoxArtBg      = "bg-boxart-issd-universal.png"
+    $BoxTitleLines = @("INTERNATIONAL", "SUPERSTAR", "SOCCER")
+    $ExtraSeo      = "International Superstar Soccer Deluxe, ISS Deluxe, ISSD, ninjaissd, angelo salles, international cup deluxe tournaments, Futebol 16-bit, Retro Gaming"
+    $ExtraHash     = "#ISSDeluxe #ISSD #InternationalSuperstarSoccerDeluxe #ninjaissd #InternationalCupDeluxe #skimboll2001 #FutebolRetro #16Bit"
+    $ExtraTags     = @("International Superstar Soccer Deluxe", "ISS Deluxe", "ISSD", "ninjaissd", "angelo salles", "international cup deluxe", "skimboll2001", "Futebol Retro", "16-bit")
 
     if ($Combined -match "(?i)gauch[aã]o|charmoso") {
-        $NomeCurto    = "ISSD CHARMOSO GAUCHAO$SufixoAno"
-        $NomeCompleto = "ISSD Charmoso Gauchão$SufixoAno"
-        $SubThumb     = "CAMPEONATO GAUCHO ROMHACK$SufixoAno • ISSD"
-        $ExtraSeo    += ", ISSD Charmoso Gaucho, Campeonato Gaucho ISSD, Gauchao ROMHACK, Gremio, Internacional, Juventude, Caxias, Pelotas, Brasil de Pelotas"
-        $ExtraHash   += " #CampeonatoGaucho #Gauchao #CharmosoGauchao #ROMHACK"
-        $ExtraTags   += @("ISSD Charmoso Gaucho", "Campeonato Gaucho ISSD", "Gauchao ROMHACK")
+        $NomeCurto     = "ISSD CHARMOSO GAUCHAO$SufixoAno"
+        $NomeCompleto  = "ISSD Charmoso Gauchão$SufixoAno"
+        $SubThumb      = "CAMPEONATO GAUCHO ROMHACK$SufixoAno • ISSD"
+        $BoxArtBg      = "bg-boxart-charmoso-gauchao.png"
+        $BoxTitleLines = @()
+        $ExtraSeo     += ", ISSD Charmoso Gaucho, Campeonato Gaucho ISSD, Gauchao ROMHACK, Gremio, Internacional, Juventude, Caxias, Pelotas, Brasil de Pelotas, Inter-SM, Riograndense-SM, Gandense, Classico Rio-Nal, Rional"
+        $ExtraHash    += " #CampeonatoGaucho #Gauchao #CharmosoGauchao #ROMHACK"
+        $ExtraTags    += @("ISSD Charmoso Gaucho", "Campeonato Gaucho ISSD", "Gauchao ROMHACK")
     }
     elseif ($Combined -match "(?i)deutscher|fussball|alem[aã]o|bundesliga") {
-        $NomeCurto    = "ISSD DEUTSCHER FUSSBALL$SufixoAno"
-        $NomeCompleto = "ISSD Deutscher Fussball$SufixoAno"
-        $SubThumb     = "DEUTSCHER FUSSBALL ROMHACK$SufixoAno • ISSD"
-        $ExtraSeo    += ", ISSD Deutscher Fussball, Campeonato Alemao ISSD, Bundesliga ISSD, Deutscher Fussball ROMHACK"
-        $ExtraHash   += " #DeutscherFussball #Bundesliga #CampeonatoAlemao #ROMHACK"
-        $ExtraTags   += @("ISSD Deutscher Fussball", "Bundesliga ISSD", "Campeonato Alemao ISSD")
+        $NomeCurto     = "ISSD DEUTSCHER FUSSBALL$SufixoAno"
+        $NomeCompleto  = "ISSD Deutscher Fussball$SufixoAno"
+        $SubThumb      = "DEUTSCHER FUSSBALL ROMHACK$SufixoAno • ISSD"
+        $BoxTitleLines = @("ISSD:", "DEUTSCHER", "FUSSBALL", $(if ($AnoFinal) { $AnoFinal } else { "DELUXE" }))
+        $ExtraSeo     += ", ISSD Deutscher Fussball, Campeonato Alemao ISSD, Bundesliga ISSD, Deutscher Fussball ROMHACK"
+        $ExtraHash    += " #DeutscherFussball #Bundesliga #CampeonatoAlemao #ROMHACK"
+        $ExtraTags    += @("ISSD Deutscher Fussball", "Bundesliga ISSD", "Campeonato Alemao ISSD")
     }
     elseif ($Combined -match "(?i)champions\s*league|\bcl\s*2[0-9]\b") {
-        $NomeCurto    = "ISSD CHAMPIONS LEAGUE$SufixoAno"
-        $NomeCompleto = "ISSD Champions League$SufixoAno"
-        $SubThumb     = "CHAMPIONS LEAGUE ROMHACK$SufixoAno • ISSD"
-        $ExtraSeo    += ", ISSD Champions League, Champions League ISSD, UEFA Champions League 16-bit, Champions League ROMHACK"
-        $ExtraHash   += " #ChampionsLeague #ISSDChampionsLeague #ROMHACK"
-        $ExtraTags   += @("ISSD Champions League", "Champions League ISSD", "Champions League ROMHACK")
+        $NomeCurto     = "ISSD CHAMPIONS LEAGUE$SufixoAno"
+        $NomeCompleto  = "ISSD Champions League$SufixoAno"
+        $SubThumb      = "CHAMPIONS LEAGUE ROMHACK$SufixoAno • ISSD"
+        $BoxTitleLines = @("ISSD:", "CHAMPIONS", "LEAGUE", $(if ($AnoFinal) { $AnoFinal } else { "DELUXE" }))
+        $ExtraSeo     += ", ISSD Champions League, Champions League ISSD, UEFA Champions League 16-bit, Champions League ROMHACK"
+        $ExtraHash    += " #ChampionsLeague #ISSDChampionsLeague #ROMHACK"
+        $ExtraTags    += @("ISSD Champions League", "Champions League ISSD", "Champions League ROMHACK")
     }
     elseif ($Combined -match "(?i)mundial\s*de\s*clubes|club\s*world\s*cup") {
-        $NomeCurto    = "ISSD MUNDIAL DE CLUBES$SufixoAno"
-        $NomeCompleto = "ISSD Mundial de Clubes$SufixoAno"
-        $SubThumb     = "MUNDIAL DE CLUBES ROMHACK$SufixoAno • ISSD"
-        $ExtraSeo    += ", ISSD Mundial de Clubes, Club World Cup Deluxe, Mundial de Clubes ISSD, Angelo Salles Mundial, ROMHACK"
-        $ExtraHash   += " #MundialDeClubes #ClubWorldCupDeluxe #ISSDMundial #ROMHACK"
-        $ExtraTags   += @("ISSD Mundial de Clubes", "Club World Cup Deluxe", "Mundial de Clubes ISSD")
+        $NomeCurto     = "ISSD MUNDIAL DE CLUBES$SufixoAno"
+        $NomeCompleto  = "ISSD Mundial de Clubes$SufixoAno"
+        $SubThumb      = "MUNDIAL DE CLUBES ROMHACK$SufixoAno • ISSD"
+        $BoxTitleLines = @("ISSD:", "MUNDIAL DE", "CLUBES", $(if ($AnoFinal) { $AnoFinal } else { "DELUXE" }))
+        $ExtraSeo     += ", ISSD Mundial de Clubes, Club World Cup Deluxe, Mundial de Clubes ISSD, Angelo Salles Mundial, ROMHACK"
+        $ExtraHash    += " #MundialDeClubes #ClubWorldCupDeluxe #ISSDMundial #ROMHACK"
+        $ExtraTags    += @("ISSD Mundial de Clubes", "Club World Cup Deluxe", "Mundial de Clubes ISSD")
     }
     elseif ($Combined -match "(?i)extended\s*brasil\s*popular|brasil\s*popular") {
-        $NomeCurto    = "ISSD EXTENDED BRASIL$SufixoAno"
-        $NomeCompleto = "ISSD Extended Brasil Popular$SufixoAno"
-        $SubThumb     = "EXTENDED BRASIL POPULAR$SufixoAno • ROMHACK"
-        $ExtraSeo    += ", ISSD Extended Brasil Popular, Campeonato Brasileiro ISSD Extended, Brasil Popular ROMHACK"
-        $ExtraHash   += " #ISSDExtended #BrasilPopular #CampeonatoBrasileiro #ROMHACK"
-        $ExtraTags   += @("ISSD Extended Brasil Popular", "ISSD Extended", "Brasil Popular ROMHACK")
+        $NomeCurto     = "ISSD EXTENDED BRASIL$SufixoAno"
+        $NomeCompleto  = "ISSD Extended Brasil Popular$SufixoAno"
+        $SubThumb      = "EXTENDED BRASIL POPULAR$SufixoAno • ROMHACK"
+        $BoxTitleLines = @("ISSD:", "BRASIL", "POPULAR", $(if ($AnoFinal) { $AnoFinal } else { "EXTENDED" }))
+        $ExtraSeo     += ", ISSD Extended Brasil Popular, Campeonato Brasileiro ISSD Extended, Brasil Popular ROMHACK"
+        $ExtraHash    += " #ISSDExtended #BrasilPopular #CampeonatoBrasileiro #ROMHACK"
+        $ExtraTags    += @("ISSD Extended Brasil Popular", "ISSD Extended", "Brasil Popular ROMHACK")
     }
     elseif ($Combined -match "(?i)\bextended\b") {
-        $NomeCurto    = "ISSD EXTENDED$SufixoAno"
-        $NomeCompleto = "ISSD Extended$SufixoAno"
-        $SubThumb     = "ISSD EXTENDED$SufixoAno • SELECOES ATUALIZADAS"
-        $ExtraSeo    += ", ISSD Extended, International Superstar Soccer Deluxe Extended, ISSD Escalacoes Atualizadas, ISSD Selecoes Atualizadas"
-        $ExtraHash   += " #ISSDExtended #InternationalSuperstarSoccerExtended #ROMHACK"
-        $ExtraTags   += @("ISSD Extended", "ISS Deluxe Extended", "ISSD Atualizado")
+        $NomeCurto     = "ISSD EXTENDED$SufixoAno"
+        $NomeCompleto  = "ISSD Extended$SufixoAno"
+        $SubThumb      = "ISSD EXTENDED$SufixoAno • SELECOES ATUALIZADAS"
+        $BoxTitleLines = @("ISSD:", "SUPERSTAR", "EXTENDED", $(if ($AnoFinal) { $AnoFinal } else { "DELUXE" }))
+        $ExtraSeo     += ", ISSD Extended, International Superstar Soccer Deluxe Extended, ISSD Escalacoes Atualizadas, ISSD Selecoes Atualizadas"
+        $ExtraHash    += " #ISSDExtended #InternationalSuperstarSoccerExtended #ROMHACK"
+        $ExtraTags    += @("ISSD Extended", "ISS Deluxe Extended", "ISSD Atualizado")
     }
     elseif ($Combined -match "(?i)campeonato\s*brasileiro") {
-        $NomeCurto    = "CAMPEONATO BRASILEIRO$SufixoAno"
-        $NomeCompleto = "ISSD Campeonato Brasileiro$SufixoAno"
-        $SubThumb     = "ISSD CAMPEONATO BRASILEIRO$SufixoAno • 16-BIT"
-        $ExtraSeo    += ", ISSD Campeonato Brasileiro$SufixoAno, Campeonato Brasileiro $AnoFinal, Forte e Campeao, Futebol Brasileiro 16-bit, Brasileirao Anos 90"
-        $ExtraHash   += " #CampeonatoBrasileiro #Brasileirao$AnoFinal #ForteECampeao #ROMHACK"
-        $ExtraTags   += @("ISSD Campeonato Brasileiro$SufixoAno", "Campeonato Brasileiro $AnoFinal", "Forte e Campeao")
+        $NomeCurto     = "CAMPEONATO BRASILEIRO$SufixoAno"
+        $NomeCompleto  = "ISSD Campeonato Brasileiro$SufixoAno"
+        $SubThumb      = "ISSD CAMPEONATO BRASILEIRO$SufixoAno • 16-BIT"
+        $BoxTitleLines = @("ISSD:", "CAMPEONATO", "BRASILEIRO", $(if ($AnoFinal) { $AnoFinal } else { "96" }))
+        $ExtraSeo     += ", ISSD Campeonato Brasileiro$SufixoAno, Campeonato Brasileiro $AnoFinal, Forte e Campeao, Futebol Brasileiro 16-bit, Brasileirao Anos 90"
+        $ExtraHash    += " #CampeonatoBrasileiro #Brasileirao$AnoFinal #ForteECampeao #ROMHACK"
+        $ExtraTags    += @("ISSD Campeonato Brasileiro$SufixoAno", "Campeonato Brasileiro $AnoFinal", "Forte e Campeao")
     }
     elseif ($Combined -match "(?i)futebol\s*brasileiro") {
-        $NomeCurto    = "FUTEBOL BRASILEIRO$SufixoAno"
-        $NomeCompleto = "ISSD Futebol Brasileiro$SufixoAno"
-        $SubThumb     = "ISSD FUTEBOL BRASILEIRO$SufixoAno • 16-BIT"
-        $ExtraSeo    += ", ISSD Futebol Brasileiro$SufixoAno, Futebol Brasileiro $AnoFinal, Campeonato Brasileiro ISSD, Brasileirao Anos 90"
-        $ExtraHash   += " #FutebolBrasileiro #FutebolBrasileiro$AnoFinal #Brasileirao #ROMHACK"
-        $ExtraTags   += @("ISSD Futebol Brasileiro$SufixoAno", "Futebol Brasileiro $AnoFinal", "Campeonato Brasileiro ISSD")
+        $NomeCurto     = "FUTEBOL BRASILEIRO$SufixoAno"
+        $NomeCompleto  = "ISSD Futebol Brasileiro$SufixoAno"
+        $SubThumb      = "ISSD FUTEBOL BRASILEIRO$SufixoAno • 16-BIT"
+        $BoxTitleLines = @("ISSD:", "FUTEBOL", "BRASILEIRO", $(if ($AnoFinal) { $AnoFinal } else { "96" }))
+        $ExtraSeo     += ", ISSD Futebol Brasileiro$SufixoAno, Futebol Brasileiro $AnoFinal, Campeonato Brasileiro ISSD, Brasileirao Anos 90"
+        $ExtraHash    += " #FutebolBrasileiro #FutebolBrasileiro$AnoFinal #Brasileirao #ROMHACK"
+        $ExtraTags    += @("ISSD Futebol Brasileiro$SufixoAno", "Futebol Brasileiro $AnoFinal", "Campeonato Brasileiro ISSD")
     }
     elseif ($Combined -match "(?i)ronaldinho") {
-        $NomeCurto    = "RONALDINHO SOCCER$SufixoAno"
-        $NomeCompleto = "ISSD Ronaldinho Soccer$SufixoAno"
-        $SubThumb     = "ISSD RONALDINHO SOCCER$SufixoAno • 16-BIT"
-        $ExtraSeo    += ", ISSD Ronaldinho Soccer$SufixoAno, Ronaldinho Soccer $AnoFinal, Ronaldinho Campeonato Brasileiro, Futebol 16-bit"
-        $ExtraHash   += " #RonaldinhoSoccer #RonaldinhoSoccer$AnoFinal #ISSD #ROMHACK"
-        $ExtraTags   += @("ISSD Ronaldinho Soccer$SufixoAno", "Ronaldinho Soccer $AnoFinal", "Ronaldinho Soccer")
+        $NomeCurto     = "RONALDINHO SOCCER$SufixoAno"
+        $NomeCompleto  = "ISSD Ronaldinho Soccer$SufixoAno"
+        $SubThumb      = "ISSD RONALDINHO SOCCER$SufixoAno • 16-BIT"
+        $BoxTitleLines = @("ISSD:", "RONALDINHO", "SOCCER", $(if ($AnoFinal) { $AnoFinal } else { "99" }))
+        $ExtraSeo     += ", ISSD Ronaldinho Soccer$SufixoAno, Ronaldinho Soccer $AnoFinal, Ronaldinho Campeonato Brasileiro, Futebol 16-bit"
+        $ExtraHash    += " #RonaldinhoSoccer #RonaldinhoSoccer$AnoFinal #ISSD #ROMHACK"
+        $ExtraTags    += @("ISSD Ronaldinho Soccer$SufixoAno", "Ronaldinho Soccer $AnoFinal", "Ronaldinho Soccer")
     }
 
     return @{
@@ -243,6 +255,8 @@ function Get-GameProfile {
         NomeCurto      = $NomeCurto
         NomeCompleto   = $NomeCompleto
         SubtituloThumb = $SubThumb
+        BoxArtBg       = $BoxArtBg
+        BoxTitleLines  = $BoxTitleLines
         CorBadge       = @(210, 29, 29)
         CorDestaque    = @(244, 230, 0)
         PixelArt       = $true
@@ -268,6 +282,9 @@ $IssdTeamKeywords = @{
     "Franca"          = "France, Dubois, Moreau, Girard, Blanc, Laurent"
     "BayernDeMunique" = "Bayern Munchen, Bayern Munich, Harry Kane, Goretzka, Alphonso Davies, Urbig, Musiala, Kimmich"
     "BorussiaDortmund"= "Borussia Dortmund, BVB, Ryerson, Der Klassiker, Bundesliga, Champions League"
+    "InterSM"         = "Inter de Santa Maria, Inter-SM, Internacional de Santa Maria, Alvirrubro, Baixada Melancólica, Santa Maria RS, Classico Rio-Nal, Rional"
+    "Gandense"        = "Riograndense-SM, Riograndense de Santa Maria, Gandense, Periquito da Estacao, Eucaliptos, Santa Maria RS, Classico Rio-Nal, Rional, Ceninha, G Gross"
+    "RiograndenseSM"  = "Riograndense-SM, Riograndense de Santa Maria, Gandense, Periquito da Estacao, Eucaliptos, Santa Maria RS, Classico Rio-Nal, Rional"
 }
 
 function Resolve-TargetVideo([string]$InputPath) {
@@ -570,42 +587,111 @@ function New-MatchThumbnail {
         $ScoreboardImgPath = $null
     }
 
-    # 1. FUNDO 100% TELA CHEIA (1280x720) — O VIDEO E O PROTAGONISTA ABSOLUTO
-    if ($ActionImgPath -and (Test-Path $ActionImgPath)) {
-        $ActImg = [System.Drawing.Image]::FromFile((Resolve-Path $ActionImgPath).Path)
-        if ($Profile.PixelArt) {
-            $Gfx.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::NearestNeighbor
-            $Gfx.PixelOffsetMode   = [System.Drawing.Drawing2D.PixelOffsetMode]::Half
-        } else {
+    # 1. FUNDO ESTILO BOX-ART 16-BIT (De acordo com cada jogo/ROMHACK)
+    $BoxArtLoaded = $false
+    if ($Profile.BoxArtBg) {
+        $CandidateBoxBg = Join-Path $ThumbsDir $Profile.BoxArtBg
+        if (Test-Path $CandidateBoxBg) {
+            $BgImg = [System.Drawing.Image]::FromFile((Resolve-Path $CandidateBoxBg).Path)
             $Gfx.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+            $Gfx.DrawImage($BgImg, 0, 0, 1280, 720)
+            $BgImg.Dispose()
+            $BoxArtLoaded = $true
         }
-        $Gfx.DrawImage($ActImg, 0, 0, 1280, 720)
-        $ActImg.Dispose()
-    } else {
-        $GradBg = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
-            (New-Object System.Drawing.Point(0, 0)),
-            (New-Object System.Drawing.Point(1280, 720)),
-            ([System.Drawing.Color]::FromArgb(255, 18, 28, 22)),
-            ([System.Drawing.Color]::FromArgb(255, 10, 14, 18))
-        )
-        $Gfx.FillRectangle($GradBg, 0, 0, 1280, 720)
-
-        $PitchPen = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(45, 255, 255, 255), 3)
-        $Gfx.DrawRectangle($PitchPen, 90, 50, 1100, 560)
-        $Gfx.DrawLine($PitchPen, 640, 50, 640, 610)
-        $Gfx.DrawEllipse($PitchPen, 510, 200, 260, 260)
-
-        $FontWatermarkCenter = Get-FittedFont -Gfx $Gfx -Text $Profile.NomeCompleto -FontFamily "Segoe UI" -MaxSize 42 -MinSize 24 -MaxWidth 1000
-        $Gfx.DrawString($Profile.NomeCompleto, $FontWatermarkCenter, $BrushMuted, (New-Object System.Drawing.RectangleF(140, 280, 1000, 80)), $FormatCenter)
     }
 
-    # 2. MINIATURA DISCRETA DO PLACAR FINAL IN-GAME (Canto Inferior Direito, acima da barra: 304x224)
+    if (-not $BoxArtLoaded) {
+        if ($ActionImgPath -and (Test-Path $ActionImgPath)) {
+            $ActImg = [System.Drawing.Image]::FromFile((Resolve-Path $ActionImgPath).Path)
+            if ($Profile.PixelArt) {
+                $Gfx.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::NearestNeighbor
+                $Gfx.PixelOffsetMode   = [System.Drawing.Drawing2D.PixelOffsetMode]::Half
+            } else {
+                $Gfx.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+            }
+            $Gfx.DrawImage($ActImg, 0, 0, 1280, 720)
+            $ActImg.Dispose()
+        } else {
+            $GradBg = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
+                (New-Object System.Drawing.Point(0, 0)),
+                (New-Object System.Drawing.Point(1280, 720)),
+                ([System.Drawing.Color]::FromArgb(255, 18, 28, 22)),
+                ([System.Drawing.Color]::FromArgb(255, 10, 14, 18))
+            )
+            $Gfx.FillRectangle($GradBg, 0, 0, 1280, 720)
+        }
+    }
+
+    # 1.B. TITULO 3D METALICO INCLINADO NA FAIXA VERMELHA (Para jogos usando o template universal 16-bit)
+    if ($BoxArtLoaded -and $Profile.BoxTitleLines -and $Profile.BoxTitleLines.Count -gt 0) {
+        $State = $Gfx.Save()
+        $Gfx.TranslateTransform(765, 365)
+        $Gfx.RotateTransform(-8.5)
+        $LineCount = $Profile.BoxTitleLines.Count
+        $StartY = -($LineCount * 34)
+        for ($i = 0; $i -lt $LineCount; $i++) {
+            $LineStr = $Profile.BoxTitleLines[$i].ToUpper()
+            $FontSz = if ($i -eq 0 -and $LineStr.Length -le 6) { 46 } elseif ($LineStr.Length -gt 11) { 38 } else { 44 }
+            $Path3D = New-Object System.Drawing.Drawing2D.GraphicsPath
+            $Fam = New-Object System.Drawing.FontFamily("Arial Black")
+            $Path3D.AddString($LineStr, $Fam, [int]([System.Drawing.FontStyle]::Bold -bor [System.Drawing.FontStyle]::Italic), $FontSz, (New-Object System.Drawing.PointF(0, ($StartY + ($i * 58)))), $FormatCenter)
+
+            # Sombra 3D preta profunda
+            $MatShadow = New-Object System.Drawing.Drawing2D.Matrix
+            $MatShadow.Translate(5, 6)
+            $ShadowPath = $Path3D.Clone()
+            $ShadowPath.Transform($MatShadow)
+            $Gfx.FillPath((New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(230, 5, 10, 22))), $ShadowPath)
+            $ShadowPath.Dispose()
+            $MatShadow.Dispose()
+
+            # Contorno externo azul-escuro (desenhado ANTES do preenchimento para nao afinar a fonte!)
+            $PenOutline = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(255, 8, 22, 58), 10)
+            $PenOutline.LineJoin = [System.Drawing.Drawing2D.LineJoin]::Round
+            $Gfx.DrawPath($PenOutline, $Path3D)
+
+            # Preenchimento Cromado Azul/Branco estilo 16-bit
+            $RectBounds = New-Object System.Drawing.RectangleF(-280, ($StartY + ($i * 58) - 10), 560, 70)
+            $ChromeBrush = New-Object System.Drawing.Drawing2D.LinearGradientBrush(
+                $RectBounds,
+                ([System.Drawing.Color]::FromArgb(255, 255, 255, 255)),
+                ([System.Drawing.Color]::FromArgb(255, 110, 185, 255)),
+                [System.Drawing.Drawing2D.LinearGradientMode]::Vertical
+            )
+            $Gfx.FillPath($ChromeBrush, $Path3D)
+
+            $ChromeBrush.Dispose()
+            $PenOutline.Dispose()
+            $Path3D.Dispose()
+            $Fam.Dispose()
+        }
+        $Gfx.Restore($State)
+    }
+
+    # Limpa faixa preta inferior da moldura 16-bit antes de desenhar o placar
+    $Gfx.FillRectangle([System.Drawing.Brushes]::Black, 0, 672, 1230, 48)
+
+    # 2. ELEMENTOS CLASSICOS DA CAIXA 16-BIT (Grelha listrada direita + Selo Oficial Skimboll 2001)
+    $GrillPen = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(140, 120, 120, 125), 3)
+    for ($gy = 540; $gy -le 642; $gy += 7) {
+        $Gfx.DrawLine($GrillPen, 1162, $gy, 1272, $gy)
+    }
+    $GrillPen.Dispose()
+
+    # Selo Oficial Skimboll 2001 no topo direito da moldura preta
+    $SealRect = New-Object System.Drawing.RectangleF(880, 5, 272, 28)
+    $Gfx.FillRectangle((New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(235, 210, 29, 29))), $SealRect)
+    $Gfx.DrawRectangle($PenYellowThin, 880, 5, 272, 28)
+    $FontSeal = New-Object System.Drawing.Font("Consolas", 11, [System.Drawing.FontStyle]::Bold)
+    $Gfx.DrawString("20 ▽S 01 • SKIMBOLL OFFICIAL", $FontSeal, $BrushSkimYellow, $SealRect, $FormatCenter)
+
+    # 3. QUADRO IN-GAME DO PLACAR FINAL E ESCUDOS (Canto Direito da Arte, abaixo da bola DELUXE)
     if ($ScoreboardImgPath -and (Test-Path $ScoreboardImgPath)) {
-        $PipX = 958
-        $PipY = 412
-        $PipW = 304
-        $PipH = 224
-        $ShadowBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(160, 0, 0, 0))
+        $PipX = 948
+        $PipY = 472
+        $PipW = 200
+        $PipH = 148
+        $ShadowBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(210, 0, 0, 0))
         $Gfx.FillRectangle($ShadowBrush, ($PipX - 4), ($PipY - 4), ($PipW + 8), ($PipH + 8))
 
         $ScoreImg = [System.Drawing.Image]::FromFile((Resolve-Path $ScoreboardImgPath).Path)
@@ -614,42 +700,83 @@ function New-MatchThumbnail {
         }
         $Gfx.DrawImage($ScoreImg, $PipX, $PipY, $PipW, $PipH)
         $ScoreImg.Dispose()
-        $Gfx.DrawRectangle($PenSubtleBorder, $PipX, $PipY, $PipW, $PipH)
+        $Gfx.DrawRectangle((New-Object System.Drawing.Pen($ColorSkimYellow, 3)), $PipX, $PipY, $PipW, $PipH)
     }
 
-    # 3. BARRA INFERIOR DISCRETA E SOBRIA (Apenas 68px de altura, semi-transparente)
-    $BarY = 652
-    $BarH = 68
-    $Gfx.FillRectangle($BrushBarBg, 0, $BarY, 1280, $BarH)
-    $Gfx.DrawLine($PenYellowThin, 0, $BarY, 1280, $BarY)
+    # 4. SELO RETRO "K-A / 16-BIT" E LOGO SKIMBOLL NO CANTO INFERIOR ESQUERDO (Estilo Capa 16-Bit)
+    $KaX = 20; $KaY = 562; $KaW = 86; $KaH = 144
+    $Gfx.FillRectangle((New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, 250, 250, 250))), $KaX, $KaY, $KaW, $KaH)
+    $Gfx.FillRectangle((New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, 12, 12, 14))), ($KaX + 4), ($KaY + 22), ($KaW - 8), ($KaH - 44))
+    $Gfx.DrawRectangle((New-Object System.Drawing.Pen([System.Drawing.Color]::Black, 3)), $KaX, $KaY, $KaW, $KaH)
+    $FontKaTop = New-Object System.Drawing.Font("Arial", 7, [System.Drawing.FontStyle]::Bold)
+    $BrushBlack = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::Black)
+    $Gfx.DrawString("SKIMBOLL 2001", $FontKaTop, $BrushBlack, (New-Object System.Drawing.RectangleF($KaX, ($KaY + 3), $KaW, 18)), $FormatCenter)
+    $Gfx.DrawString("16-BIT SERIES", $FontKaTop, $BrushBlack, (New-Object System.Drawing.RectangleF($KaX, ($KaY + $KaH - 19), $KaW, 18)), $FormatCenter)
 
-    # Watermark Oficial (Triangulo Invertido ▽ com S) discreto na esquerda da barra
+    # Triangulo Oficial ▽S dentro do selo inferior esquerdo
     $TriPts = @(
-        (New-Object System.Drawing.PointF(22, 664)),
-        (New-Object System.Drawing.PointF(70, 664)),
-        (New-Object System.Drawing.PointF(46, 710))
+        (New-Object System.Drawing.PointF(($KaX + 14), ($KaY + 34))),
+        (New-Object System.Drawing.PointF(($KaX + $KaW - 14), ($KaY + 34))),
+        (New-Object System.Drawing.PointF(($KaX + ($KaW / 2)), ($KaY + 112)))
     )
     $Gfx.FillPolygon($BrushSkimRed, $TriPts)
     $PenTriSmall = New-Object System.Drawing.Pen($ColorSkimYellow, 3)
     $Gfx.DrawPolygon($PenTriSmall, $TriPts)
-    $FontTriS = New-Object System.Drawing.Font("Arial Black", 16, [System.Drawing.FontStyle]::Bold)
-    $Gfx.DrawString("S", $FontTriS, $BrushSkimYellow, (New-Object System.Drawing.RectangleF(22, 662, 48, 34)), $FormatCenter)
+    $FontTriS = New-Object System.Drawing.Font("Arial Black", 20, [System.Drawing.FontStyle]::Bold)
+    $Gfx.DrawString("S", $FontTriS, $BrushSkimYellow, (New-Object System.Drawing.RectangleF(($KaX + 14), ($KaY + 36), ($KaW - 28), 46)), $FormatCenter)
 
-    # Confronto e Placar Limpos (Esquerda/Centro da barra)
+    # 5. FAIXA INFERIOR DA CAIXA 16-BIT COM O PLACAR FINAL EM DESTAQUE ABSOLUTO
+    $BarX = 118
+    $BarY = 636
+    $BarW = 1034
+    $BarH = 78
+    $Gfx.FillRectangle((New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(245, 8, 8, 10))), $BarX, $BarY, $BarW, $BarH)
+
+    # Sub-badge superior (Nome do Classico / Torneio + Placar Final)
+    $ModoLabel = if ($Modo) { "★  $($Modo.ToUpper())  •  PLACAR FINAL  ★" } else { "★  PLACAR FINAL  •  $($Profile.NomeCurto)  ★" }
+    $BadgeW = 540
+    $BadgeX = $BarX + (($BarW - $BadgeW) / 2)
+    $Gfx.FillRectangle($BrushSkimRed, $BadgeX, ($BarY - 14), $BadgeW, 24)
+    $Gfx.DrawRectangle($PenYellowThin, $BadgeX, ($BarY - 14), $BadgeW, 24)
+    $FontBadge = Get-FittedFont -Gfx $Gfx -Text $ModoLabel -FontFamily "Segoe UI" -MaxSize 11 -MinSize 9 -MaxWidth ($BadgeW - 16)
+    $Gfx.DrawString($ModoLabel, $FontBadge, $BrushSkimYellow, (New-Object System.Drawing.RectangleF($BadgeX, ($BarY - 14), $BadgeW, 24)), $FormatCenter)
+
+    # Placar Principal em Tipografia Arcade Gigante (Time 1  [ G1 x G2 ]  Time 2)
     if ($CustomBarText) {
         $MatchString = $CustomBarText.ToUpper()
+        $FontMatch = Get-FittedFont -Gfx $Gfx -Text $MatchString -FontFamily "Arial Black" -MaxSize 30 -MinSize 18 -MaxWidth ($BarW - 30)
+        $Gfx.DrawString($MatchString, $FontMatch, $BrushSkimYellow, (New-Object System.Drawing.RectangleF($BarX, ($BarY + 10), $BarW, 46)), $FormatCenter)
     } else {
         $T1Upper = $T1.ToUpper()
         $T2Upper = $T2.ToUpper()
-        $MatchString = "$T1Upper   $G1 x $G2   $T2Upper"
-    }
-    $FontMatch = Get-FittedFont -Gfx $Gfx -Text $MatchString -FontFamily "Segoe UI" -MaxSize 28 -MinSize 18 -MaxWidth 740
-    $Gfx.DrawString($MatchString, $FontMatch, $BrushWhite, (New-Object System.Drawing.RectangleF(88, $BarY, 750, $BarH)), $FormatLeft)
+        $ScoreBoxW = 176
+        $ScoreBoxH = 44
+        $ScoreBoxX = $BarX + (($BarW - $ScoreBoxW) / 2)
+        $ScoreBoxY = $BarY + 13
 
-    # Identificacao Discreta do Jogo / ROMHACK na Direita da Barra
-    $GameLabel = "$($Profile.NomeCurto)  •  SKIMBOLL2001"
-    $FontGame = Get-FittedFont -Gfx $Gfx -Text $GameLabel -FontFamily "Consolas" -MaxSize 17 -MinSize 12 -MaxWidth 470
-    $Gfx.DrawString($GameLabel, $FontGame, $BrushSkimYellow, (New-Object System.Drawing.RectangleF(770, $BarY, 490, $BarH)), $FormatRight)
+        # Caixa Central do Placar Final (Vermelho e Amarelo #F4E600)
+        $Gfx.FillRectangle($BrushSkimRed, $ScoreBoxX, $ScoreBoxY, $ScoreBoxW, $ScoreBoxH)
+        $Gfx.DrawRectangle((New-Object System.Drawing.Pen($ColorSkimYellow, 3)), $ScoreBoxX, $ScoreBoxY, $ScoreBoxW, $ScoreBoxH)
+        $ScoreStr = "$G1  X  $G2"
+        $FontScore = New-Object System.Drawing.Font("Arial Black", 26, [System.Drawing.FontStyle]::Bold)
+        $Gfx.DrawString($ScoreStr, $FontScore, $BrushSkimYellow, (New-Object System.Drawing.RectangleF($ScoreBoxX, ($ScoreBoxY - 2), $ScoreBoxW, $ScoreBoxH)), $FormatCenter)
+
+        # Time 1 (Esquerda do Placar)
+        $TeamAreaW = (($BarW - $ScoreBoxW) / 2) - 18
+        $FontT1 = Get-FittedFont -Gfx $Gfx -Text $T1Upper -FontFamily "Arial Black" -MaxSize 26 -MinSize 15 -MaxWidth $TeamAreaW
+        $Gfx.DrawString($T1Upper, $FontT1, $BrushWhite, (New-Object System.Drawing.RectangleF(($BarX + 8), $ScoreBoxY, $TeamAreaW, $ScoreBoxH)), $FormatRight)
+
+        # Time 2 (Direita do Placar)
+        $FontT2 = Get-FittedFont -Gfx $Gfx -Text $T2Upper -FontFamily "Arial Black" -MaxSize 26 -MinSize 15 -MaxWidth $TeamAreaW
+        $Gfx.DrawString($T2Upper, $FontT2, $BrushWhite, (New-Object System.Drawing.RectangleF(($ScoreBoxX + $ScoreBoxW + 14), $ScoreBoxY, $TeamAreaW, $ScoreBoxH)), $FormatLeft)
+    }
+
+    # Faixa Vermelha Classica Inferior (16-BIT ENTERTAINMENT SYSTEM)
+    $RedRuleY = 696
+    $Gfx.FillRectangle($BrushSkimRed, $BarX, $RedRuleY, $BarW, 18)
+    $BottomSubText = "$($Profile.NomeCompleto.ToUpper())   •   16-BIT DELUXE ENTERTAINMENT SYSTEM   •   SKIMBOLL2001"
+    $FontBottomSub = New-Object System.Drawing.Font("Consolas", 10, [System.Drawing.FontStyle]::Bold)
+    $Gfx.DrawString($BottomSubText, $FontBottomSub, $BrushSkimYellow, (New-Object System.Drawing.RectangleF($BarX, $RedRuleY, $BarW, 18)), $FormatCenter)
 
     $Bmp.Save($OutPath, [System.Drawing.Imaging.ImageFormat]::Png)
     $Gfx.Dispose()
