@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Publicador e Agendador Oficial Multi-Jogos & ROMHACKs - Canal Skimboll2001
     - PROIBIDO referenciar "Nintendo", "Super Nintendo", "SNES", "Super Famicom" ou "Konami"
@@ -30,6 +30,7 @@ param(
     [string]$TituloCustom = "",         # Opcional para treinos/especiais
     [string]$TextoBarraCustom = "",     # Opcional para barra inferior da thumb
     [string]$NotaExtra = "",            # Nota adicional em destaque no topo da descricao
+    [string]$SobreEquipes = "",         # Texto descritivo extra sobre a historia/tradicao das equipes da partida
     [ValidateSet("1080p", "1440p", "Original")]
     [string]$QualidadeUpload = "1440p", # Upscale Pixel-Perfect (NearestNeighbor) automatico para 1440p60 (VP9) ou 1080p60
     [string]$ArquivoThumb,
@@ -181,8 +182,9 @@ function Get-GameProfile {
         $NomeCurto     = "ISSD DEUTSCHER FUSSBALL$SufixoAno"
         $NomeCompleto  = "ISSD Deutscher Fussball$SufixoAno"
         $SubThumb      = "DEUTSCHER FUSSBALL ROMHACK$SufixoAno • ISSD"
-        $BoxTitleLines = @("ISSD:", "DEUTSCHER", "FUSSBALL", $(if ($AnoFinal) { $AnoFinal } else { "DELUXE" }))
-        $ExtraSeo     += ", ISSD Deutscher Fussball, Campeonato Alemao ISSD, Bundesliga ISSD, Deutscher Fussball ROMHACK"
+        $BoxArtBg      = "bg-boxart-deutscher-fussball.png"
+        $BoxTitleLines = @()
+        $ExtraSeo     += ", ISSD Deutscher Fussball, Campeonato Alemao ISSD, Bundesliga ISSD, Deutscher Fussball ROMHACK, Eintracht Frankfurt, VfL 1899 Osnabruck, DFB Pokal, 2. Bundesliga"
         $ExtraHash    += " #DeutscherFussball #Bundesliga #CampeonatoAlemao #ROMHACK"
         $ExtraTags    += @("ISSD Deutscher Fussball", "Bundesliga ISSD", "Campeonato Alemao ISSD")
     }
@@ -282,9 +284,21 @@ $IssdTeamKeywords = @{
     "Franca"          = "France, Dubois, Moreau, Girard, Blanc, Laurent"
     "BayernDeMunique" = "Bayern Munchen, Bayern Munich, Harry Kane, Goretzka, Alphonso Davies, Urbig, Musiala, Kimmich"
     "BorussiaDortmund"= "Borussia Dortmund, BVB, Ryerson, Der Klassiker, Bundesliga, Champions League"
-    "InterSM"         = "Inter de Santa Maria, Inter-SM, Internacional de Santa Maria, Alvirrubro, Baixada Melancólica, Santa Maria RS, Classico Rio-Nal, Rional"
-    "Gandense"        = "Riograndense-SM, Riograndense de Santa Maria, Gandense, Periquito da Estacao, Eucaliptos, Santa Maria RS, Classico Rio-Nal, Rional, Ceninha, G Gross"
-    "RiograndenseSM"  = "Riograndense-SM, Riograndense de Santa Maria, Gandense, Periquito da Estacao, Eucaliptos, Santa Maria RS, Classico Rio-Nal, Rional"
+    "InterSM"            = "Inter de Santa Maria, Inter-SM, Internacional de Santa Maria, Alvirrubro, Baixada Melancólica, Santa Maria RS, Classico Rio-Nal, Rional"
+    "Gandense"           = "Riograndense-SM, Riograndense de Santa Maria, Gandense, Periquito da Estacao, Eucaliptos, Santa Maria RS, Classico Rio-Nal, Rional, Ceninha, G Gross"
+    "RiograndenseSM"     = "Riograndense-SM, Riograndense de Santa Maria, Gandense, Periquito da Estacao, Eucaliptos, Santa Maria RS, Classico Rio-Nal, Rional"
+    "EintrachtFrankfurt" = "Eintracht Frankfurt, SGE, Die Adler, Waldstadion, Deutsche Bank Park, Frankfurt am Main, Hessen, Burkardt, Can Uzun, Ebnoutalib, Bundesliga"
+    "VFL1899Osnabruck"   = "VfL 1899 Osnabruck, VfL Osnabruck, Die Lila-Weissen, Bremer Brucke, Niedersachsen, Sauter, Jacobsen, Beck, Deutscher Fussball"
+}
+
+$IssdTeamProfiles = @{
+    "EintrachtFrankfurt" = "EINTRACHT FRANKFURT: Fundado em 1899 em Frankfurt am Main (Hessen, Alemanha), o Eintracht Frankfurt (conhecido como 'Die Adler' - As Aguias - ou pela sigla SGE) manda seus jogos no tradicional Waldstadion (Deutsche Bank Park) e veste vermelho, preto e branco. E um dos clubes mais historicos da Alemanha, campeao alemao (1959), pentacampeao da Copa da Alemanha (DFB-Pokal) e bicampeao da Copa da UEFA / Europa League (1980 e 2022). Na partida, destaca-se com jogadores como Burkardt, Can Uzun e Ebnoutalib."
+    "VFL1899Osnabruck"   = "VFL 1899 OSNABRUCK: Fundado em 17 de abril de 1899 na cidade de Osnabruck (Baixa Saxonia / Niedersachsen), o VfL 1899 Osnabruck e conhecido em toda a Alemanha como 'Die Lila-Weissen' (Os Lilas e Brancos) por seu iconico uniforme roxo e branco. Manda suas partidas no lendario estadio Bremer Brucke, famoso pela atmosfera vibrante de sua torcida. Na partida, conta com nomes como o goleiro Sauter, o meio-campista Jacobsen e Beck."
+    "InterSM"            = "INTER-SM (Esporte Clube Internacional de Santa Maria): Fundado em 1928 no coracao do Rio Grande do Sul, o Alvirrubro da Baixada Melancolica (Estadio Presidente Vargas) e um dos clubes mais tradicionais do interior gaucho, protagonista do historico Classico Rio-Nal."
+    "Gandense"           = "GANDENSE / RIOGRANDENSE-SM (Riograndense Futebol Clube): Fundado em 1912 em Santa Maria-RS, o tradicional 'Periquito da Estacao' manda seus jogos no Estadio dos Eucaliptos, vestindo verde, vermelho e amarelo, e faz com o Inter-SM o centenario Classico Rio-Nal."
+    "GandenseRiograndenseSM" = "GANDENSE / RIOGRANDENSE-SM (Riograndense Futebol Clube): Fundado em 1912 em Santa Maria-RS, o tradicional 'Periquito da Estacao' manda seus jogos no Estadio dos Eucaliptos, vestindo verde, vermelho e amarelo, e faz com o Inter-SM o centenario Classico Rio-Nal."
+    "BayernDeMunique"    = "BAYERN DE MUNIQUE (FC Bayern Munchen): Fundado em 1900 na Baviera, e o maior campeao da historia da Bundesliga e hexacampeao europeu, mandando seus jogos na Allianz Arena."
+    "BorussiaDortmund"   = "BORUSSIA DORTMUND (BVB 09): Fundado em 1909 na regiao do Ruhr, famoso pela Muralha Amarela do Signal Iduna Park (Westfalenstadion), multicampeao alemao e campeao europeu em 1997."
 }
 
 function Resolve-TargetVideo([string]$InputPath) {
@@ -418,7 +432,7 @@ function Remove-Accents([string]$Text) {
 
 function Build-MatchSeoData {
     param(
-        [hashtable]$Profile, [string]$T1, [string]$T2, [int]$G1, [int]$G2, [string]$Modo, [string]$Rom, [string]$CustomTitle, [string]$ExtraNote
+        [hashtable]$Profile, [string]$T1, [string]$T2, [int]$G1, [int]$G2, [string]$Modo, [string]$Rom, [string]$CustomTitle, [string]$ExtraNote, [string]$TeamsBio
     )
 
     $NomeJogo = if ($Rom) { $Rom } else { $Profile.NomeCompleto }
@@ -450,6 +464,18 @@ function Build-MatchSeoData {
     $ExtrasT2 = $IssdTeamKeywords[$TagT2]
     $ExtrasLine = (@($ExtrasT1, $ExtrasT2) | Where-Object { $_ }) -join ", "
 
+    $BioT1 = $IssdTeamProfiles[$TagT1]
+    $BioT2 = $IssdTeamProfiles[$TagT2]
+    $BlocoEquipes = @()
+    if ($TeamsBio) {
+        $BlocoEquipes += $TeamsBio
+    } else {
+        if ($BioT1) { $BlocoEquipes += "- $BioT1" } else { $BlocoEquipes += "- ${T1}: Equipe em destaque na disputa de $NomeJogo ($Modo)." }
+        if ($T2) {
+            if ($BioT2) { $BlocoEquipes += "- $BioT2" } else { $BlocoEquipes += "- ${T2}: Adversario no confronto direto pelo $NomeJogo ($Modo)." }
+        }
+    }
+
     $Star = [char]0x2605
     $LineSep = ([string][char]0x2501) * 34
 
@@ -475,6 +501,13 @@ function Build-MatchSeoData {
         "- Jogo / Versao: $NomeJogo",
         "- Torneio / Modo: $Modo",
         "- Canal: Skimboll2001 (Skimboll desde 2001 | seit 2001 | since 2001)",
+        "",
+        $LineSep,
+        "$Star SOBRE AS EQUIPES EM CAMPO (HISTORIA & TRADICAO) $Star",
+        $LineSep
+    )
+    $LinhasDesc += $BlocoEquipes
+    $LinhasDesc += @(
         "",
         $LineSep,
         "$Star INSCREVA-SE NO CANAL $Star",
@@ -806,7 +839,7 @@ switch ($Acao) {
             $ArquivoThumb = Join-Path $ThumbsDir "thumb-ultima-partida.png"
         }
         New-MatchThumbnail -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -OutPath $ArquivoThumb -ActionImgPath $ImagemLance -ScoreboardImgPath $ImagemPlacar -CustomBarText $TextoBarraCustom
-        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom -CustomTitle $TituloCustom -ExtraNote $NotaExtra
+        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom -CustomTitle $TituloCustom -ExtraNote $NotaExtra -TeamsBio $SobreEquipes
         $DescPath = Join-Path $PSScriptRoot "..\descricao-video.txt"
         [System.IO.File]::WriteAllText($DescPath, $Seo.Descricao, (New-Object System.Text.UTF8Encoding($false)))
         Write-Host "Thumbnail ($($Profile.NomeCompleto)) gerada em: $ArquivoThumb" -ForegroundColor Green
@@ -955,7 +988,7 @@ switch ($Acao) {
         if (-not $VideoId) { throw "Informe -VideoId para atualizar." }
         $Profile = Get-GameProfile -InputJogo $Jogo -InputAno $Ano -InputRom $VersaoRom -VideoFileName $ArquivoVideo
         $Token = Get-AccessToken
-        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom -CustomTitle $TituloCustom -ExtraNote $NotaExtra
+        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom -CustomTitle $TituloCustom -ExtraNote $NotaExtra -TeamsBio $SobreEquipes
 
         $DescPath = Join-Path $PSScriptRoot "..\descricao-video.txt"
         [System.IO.File]::WriteAllText($DescPath, $Seo.Descricao, (New-Object System.Text.UTF8Encoding($false)))
@@ -1024,7 +1057,7 @@ switch ($Acao) {
         $Canal = Invoke-RestMethod -Uri "https://www.googleapis.com/youtube/v3/channels?part=snippet&mine=true" -Headers @{ Authorization = "Bearer $Token" }
         Write-Host "Publicando ($($Profile.NomeCompleto)) no canal: $($Canal.items[0].snippet.title) ($($Canal.items[0].id))" -ForegroundColor Cyan
 
-        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom -CustomTitle $TituloCustom -ExtraNote $NotaExtra
+        $Seo = Build-MatchSeoData -Profile $Profile -T1 $Time1 -T2 $Time2 -G1 $Gols1 -G2 $Gols2 -Modo $ModoJogo -Rom $VersaoRom -CustomTitle $TituloCustom -ExtraNote $NotaExtra -TeamsBio $SobreEquipes
 
         $DescPath = Join-Path $PSScriptRoot "..\descricao-video.txt"
         [System.IO.File]::WriteAllText($DescPath, $Seo.Descricao, (New-Object System.Text.UTF8Encoding($false)))

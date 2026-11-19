@@ -31,11 +31,13 @@ Siga este procedimento passo a passo sempre que o usuário colocar vídeos novos
    powershell -ExecutionPolicy Bypass -File .\scripts\youtube.ps1 -Acao ExtrairFrames -ArquivoVideo ".\videos\nome-do-video.mkv"
    ```
 
-## Passo 2: Ler o Placar Final e Identificar os Times e o Jogo
+## Passo 2: Ler o Placar Final, Criar a Thumbnail Box-Art 16-Bit e Falar Sobre as Equipes
 1. Use `read_file` para visualizar as imagens geradas em `.secrets/frames/`:
-   - Veja `final_menos_8s.png`, `final_menos_5s.png` ou `final_menos_10s.png` para ler o **Placar Final** e estatísticas.
+   - Veja `final_menos_8s.png`, `final_menos_5s.png` ou `final_menos_10s.png` para ler o **Placar Final**, estatísticas e autores dos gols.
    - Veja `lance_partida.png` para conferir o visual do campo e o HUD da partida.
 2. Identifique qual jogo ou **ROMHACK** está sendo jogado consultando o [Catálogo de Jogos e ROMHACKs](./references/catalogo-jogos-e-roms.md).
+3. **Thumbnail Box-Art 16-Bit:** Gere sempre a thumbnail personalizada no estilo **Box-Art 16-Bit** de acordo com o jogo e as equipes da partida (usando o subagente `image-generator` quando houver nova combinação de jogo/equipes e compondo o placar final e o quadro in-game via `-Acao GerarThumb` no `scripts/youtube.ps1`).
+4. **Falar Sempre Sobre as Equipes:** Adicione os perfis das equipes em `$IssdTeamProfiles` / `$IssdTeamKeywords` no `scripts/youtube.ps1` (ou passe `-SobreEquipes`) e **sempre fale sobre a história, tradição, estádio, cores e curiosidades das duas equipes** na descrição do vídeo e na resposta ao usuário.
 
 ## Passo 3: Publicar Imediatamente ou Agendar no Próximo Slot (06:00 / 17:30)
 - **Para postar imediatamente (`public`):**

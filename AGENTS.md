@@ -30,8 +30,10 @@ O canal publica partidas completas dos seguintes jogos (suportados nativamente p
   - `EAFC` (*EA Sports FC*)
   - `FIFA`
 
-## 🔄 4. FLUXO DE TRABALHO, AGENDA (06:00 / 17:30) E GIT (OBRIGATÓRIO)
+## 🔄 4. FLUXO DE TRABALHO, THUMBNAIL 16-BIT, HISTÓRIA DAS EQUIPES, AGENDA (06:00 / 17:30) E GIT (OBRIGATÓRIO)
 1. **Detecção Automática nos Últimos Segundos:** Quando o usuário colocar vídeos em `videos/` e pedir para postar ou agendar, **não pergunte qual foi a partida nem o placar**. Execute `-Acao ExtrairFrames` no `scripts/youtube.ps1` e leia as imagens geradas em `.secrets/frames/` para identificar os dois times, a ROMHACK e o placar final.
-2. **Agenda Fixa de Publicação (06:00 e 17:30):** O canal publica vídeos sempre às **06:00** e às **17:30** (`-03:00`). Use a flag `-AgendarProximoSlot` (ou `-DataPublicacao "YYYY-MM-DDTHH:mm:ss-03:00"`) no `scripts/youtube.ps1` para agendar diretamente na API do YouTube (`publishAt`) e registrar em `agenda-publicacoes.json`.
-3. **Vídeos Fora do Git:** Todos os vídeos (`.mkv`, `.mp4`) devem ficar em `videos/` e permanecer no `.gitignore`.
-4. **Commit & Push Sempre:** Após qualquer alteração em scripts, documentação, `agenda-publicacoes.json` ou templates, faça sempre `git add`, `git commit` e `git push`.
+2. **Thumbnail Estilo Box-Art 16-Bit Sempre Criada por Jogo/Partida:** Gere sempre a thumbnail (`1280×720`) no estilo **Box-Art 16-Bit** de acordo com o jogo e as equipes da partida, com o placar final em destaque na barra inferior e o quadro in-game do placar final.
+3. **Falar Sempre Sobre as Equipes em Campo:** Em toda publicação (tanto na descrição do vídeo no YouTube via `scripts/youtube.ps1` quanto na resposta ao usuário), apresente sempre um resumo sobre as duas equipes que jogam (história, cidade/região, estádio, cores tradicionais, apelidos e destaques na partida).
+4. **Agenda Fixa de Publicação (06:00 e 17:30):** O canal publica vídeos sempre às **06:00** e às **17:30** (`-03:00`). Use a flag `-AgendarProximoSlot` (ou `-DataPublicacao "YYYY-MM-DDTHH:mm:ss-03:00"`) no `scripts/youtube.ps1` para agendar diretamente na API do YouTube (`publishAt`) e registrar em `agenda-publicacoes.json`.
+5. **Vídeos Fora do Git:** Todos os vídeos (`.mkv`, `.mp4`) devem ficar em `videos/` e permanecer no `.gitignore`.
+6. **Commit & Push Sempre:** Após qualquer alteração em scripts, documentação, `agenda-publicacoes.json` ou templates, faça sempre `git add`, `git commit` e `git push`.
