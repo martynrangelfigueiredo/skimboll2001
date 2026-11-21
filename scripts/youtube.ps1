@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Publicador e Agendador Oficial Multi-Jogos & ROMHACKs - Canal Skimboll2001
     - PROIBIDO referenciar "Nintendo", "Super Nintendo", "SNES", "Super Famicom" ou "Konami"
@@ -31,6 +31,8 @@ param(
     [string]$TextoBarraCustom = "",     # Opcional para barra inferior da thumb
     [string]$NotaExtra = "",            # Nota adicional em destaque no topo da descricao
     [string]$SobreEquipes = "",         # Texto descritivo extra sobre a historia/tradicao das equipes da partida
+    [ValidateSet("PT", "EN")]
+    [string]$Idioma = "PT",             # Idioma do titulo, descricao e etiquetas da thumbnail (PT ou EN)
     [ValidateSet("1080p", "1440p", "Original")]
     [string]$QualidadeUpload = "1440p", # Upscale Pixel-Perfect (NearestNeighbor) automatico para 1440p60 (VP9) ou 1080p60
     [string]$ArquivoThumb,
@@ -215,12 +217,13 @@ function Get-GameProfile {
         $ExtraHash    += " #ISSDExtended #BrasilPopular #CampeonatoBrasileiro #ROMHACK"
         $ExtraTags    += @("ISSD Extended Brasil Popular", "ISSD Extended", "Brasil Popular ROMHACK")
     }
-    elseif ($Combined -match "(?i)\bextended\b") {
+    elseif ($Combined -match "(?i)\bextended\b|deluxe_master") {
         $NomeCurto     = "ISSD EXTENDED$SufixoAno"
         $NomeCompleto  = "ISSD Extended$SufixoAno"
-        $SubThumb      = "ISSD EXTENDED$SufixoAno • SELECOES ATUALIZADAS"
-        $BoxTitleLines = @("ISSD:", "SUPERSTAR", "EXTENDED", $(if ($AnoFinal) { $AnoFinal } else { "DELUXE" }))
-        $ExtraSeo     += ", ISSD Extended, International Superstar Soccer Deluxe Extended, ISSD Escalacoes Atualizadas, ISSD Selecoes Atualizadas"
+        $SubThumb      = "ISSD EXTENDED$SufixoAno • UPDATED NATIONAL TEAMS"
+        $BoxArtBg      = "bg-boxart-issd-extended.png"
+        $BoxTitleLines = @()
+        $ExtraSeo     += ", ISSD Extended, International Superstar Soccer Deluxe Extended, ISSD Escalacoes Atualizadas, ISSD Selecoes Atualizadas, ISSD Deluxe Master, World National Teams"
         $ExtraHash    += " #ISSDExtended #InternationalSuperstarSoccerExtended #ROMHACK"
         $ExtraTags    += @("ISSD Extended", "ISS Deluxe Extended", "ISSD Atualizado")
     }
@@ -289,9 +292,14 @@ $IssdTeamKeywords = @{
     "RiograndenseSM"     = "Riograndense-SM, Riograndense de Santa Maria, Gandense, Periquito da Estacao, Eucaliptos, Santa Maria RS, Classico Rio-Nal, Rional"
     "EintrachtFrankfurt" = "Eintracht Frankfurt, SGE, Die Adler, Waldstadion, Deutsche Bank Park, Frankfurt am Main, Hessen, Burkardt, Can Uzun, Ebnoutalib, Bundesliga"
     "VFL1899Osnabruck"   = "VfL 1899 Osnabruck, VfL Osnabruck, Die Lila-Weissen, Bremer Brucke, Niedersachsen, Sauter, Jacobsen, Beck, Deutscher Fussball"
+    "Germany"            = "Germany, Deutschland, Die Mannschaft, DFB, Sieke, Kolle, Frohlich, Kuhnert, Klahold, Bergmann, Strauss, Becker, Muller, Stein, German National Team"
+    "Antarctica"         = "Antarctica, Antarct, Antarctic National Team, South Pole Football, McMurdo, Rothera, Esperanza Base, Hawker, Solberg, Sarmien, Calder, ISSD Extended"
+    "Antartida"          = "Antarctica, Antarct, Antarctic National Team, South Pole Football, Hawker, Solberg, Sarmien, Calder, ISSD Extended"
 }
 
 $IssdTeamProfiles = @{
+    "Germany"            = "GERMANY (Die Nationalmannschaft / DFB): Four-time World Cup champions (1954, 1974, 1990, 2014) and three-time European champions (1972, 1980, 1996). In International Superstar Soccer Deluxe (ISSD Extended), Germany is an offensive powerhouse led by classic 16-bit legends such as Sieke (FW #11), Kolle, and Frohlich. Despite receiving 2 red cards and playing with 9 men on a snowy pitch, Germany unleashed 26 shots to secure a 7-3 victory."
+    "Antarctica"         = "ANTARCTICA (Antarctic Selection / Polar Continent XI): Representing the southernmost continent on Earth in ISSD Extended, wearing icy polar blue and white with the white continent silhouette flag. Drawing inspiration from real-life matches played by scientific research stations across the Antarctic ice (such as McMurdo, Rothera, and Esperanza Base), Antarctica features players like Hawker (MF #7), Solberg (DF #4), Sarmien, and Calder, firing 14 shots and scoring 3 goals in a thrilling 10-goal snow match."
     "EintrachtFrankfurt" = "EINTRACHT FRANKFURT: Fundado em 1899 em Frankfurt am Main (Hessen, Alemanha), o Eintracht Frankfurt (conhecido como 'Die Adler' - As Aguias - ou pela sigla SGE) manda seus jogos no tradicional Waldstadion (Deutsche Bank Park) e veste vermelho, preto e branco. E um dos clubes mais historicos da Alemanha, campeao alemao (1959), pentacampeao da Copa da Alemanha (DFB-Pokal) e bicampeao da Copa da UEFA / Europa League (1980 e 2022). Na partida, destaca-se com jogadores como Burkardt, Can Uzun e Ebnoutalib."
     "VFL1899Osnabruck"   = "VFL 1899 OSNABRUCK: Fundado em 17 de abril de 1899 na cidade de Osnabruck (Baixa Saxonia / Niedersachsen), o VfL 1899 Osnabruck e conhecido em toda a Alemanha como 'Die Lila-Weissen' (Os Lilas e Brancos) por seu iconico uniforme roxo e branco. Manda suas partidas no lendario estadio Bremer Brucke, famoso pela atmosfera vibrante de sua torcida. Na partida, conta com nomes como o goleiro Sauter, o meio-campista Jacobsen e Beck."
     "InterSM"            = "INTER-SM (Esporte Clube Internacional de Santa Maria): Fundado em 1928 no coracao do Rio Grande do Sul, o Alvirrubro da Baixada Melancolica (Estadio Presidente Vargas) e um dos clubes mais tradicionais do interior gaucho, protagonista do historico Classico Rio-Nal."
@@ -479,49 +487,96 @@ function Build-MatchSeoData {
     $Star = [char]0x2605
     $LineSep = ([string][char]0x2501) * 34
 
-    $LinhasDesc = @(
-        $LinhaTopo,
-        "INSCREVA-SE NO CANAL SKIMBOLL2001: https://www.youtube.com/@skimboll2001?sub_confirmation=1"
-    )
-    if ($ExtraNote) {
+    if ($Idioma -eq "EN") {
+        $LinhaTopoEn = if ($T2) { "MATCH: $T1 vs $T2 | FINAL SCORE: $T1 $G1 x $G2 $T2" } else { "TRAINING / GAMEPLAY: $T1 ($Modo) | $NomeJogo" }
+        $LinhasDesc = @(
+            $LinhaTopoEn,
+            "SUBSCRIBE TO SKIMBOLL2001 CHANNEL: https://www.youtube.com/@skimboll2001?sub_confirmation=1"
+        )
+        if ($ExtraNote) {
+            $LinhasDesc += @(
+                "",
+                "IMPORTANT NOTE (PROJECT IN DEVELOPMENT / PREVIEW):",
+                $ExtraNote
+            )
+        }
+        $LinhasDesc += @(
+            "Leave a Like and subscribe to follow all full matches and retro tournaments on Skimboll2001 (new videos at 06:00 and 17:30)!",
+            "",
+            $LineSep,
+            "$Star MATCH DETAILS & FINAL SCORE $Star",
+            $LineSep,
+            "- Matchup: $ConfrontoDesc",
+            "- Final Score / Mode: $PlacarDesc",
+            "- Game / Version: $NomeJogo",
+            "- Tournament / Mode: $Modo",
+            "- Channel: Skimboll2001 (Skimboll since 2001 | desde 2001 | seit 2001)",
+            "",
+            $LineSep,
+            "$Star ABOUT THE TEAMS ON THE PITCH (HISTORY & FACTS) $Star",
+            $LineSep
+        )
+        $LinhasDesc += $BlocoEquipes
         $LinhasDesc += @(
             "",
-            "AVISO IMPORTANTE (PROJETO EM DESENVOLVIMENTO):",
-            $ExtraNote
+            $LineSep,
+            "$Star SUBSCRIBE TO THE CHANNEL $Star",
+            $LineSep,
+            "Subscribe here: https://www.youtube.com/channel/UCR1UuLEs-n55oz85e7Lc5gg?sub_confirmation=1",
+            "Full matches and tournaments of International Superstar Soccer Deluxe (ISSD, ISSD Extended, Deutscher Fussball, Charmoso Gaucho, Champions League, Club World Cup, Ronaldinho Soccer, Brazilian Championship 95-99), eFootball, EA Sports FC, and FIFA.",
+            "",
+            $LineSep,
+            "$Star SEO KEYWORDS & SEARCH TERMS $Star",
+            $LineSep,
+            "$T1, $T2, $ConfrontoDesc, $PlacarDesc, $T1 $($Profile.NomeCompleto), $($Profile.SeoKeywords), $ExtrasLine, Skimboll2001, skimboll 2001.",
+            "",
+            $HashtagsPartida
+        )
+    } else {
+        $LinhasDesc = @(
+            $LinhaTopo,
+            "INSCREVA-SE NO CANAL SKIMBOLL2001: https://www.youtube.com/@skimboll2001?sub_confirmation=1"
+        )
+        if ($ExtraNote) {
+            $LinhasDesc += @(
+                "",
+                "AVISO IMPORTANTE (PROJETO EM DESENVOLVIMENTO):",
+                $ExtraNote
+            )
+        }
+        $LinhasDesc += @(
+            "Deixe o Like e inscreva-se para acompanhar todas as partidas e torneios no canal Skimboll2001 (videos novos as 06:00 e as 17:30)!",
+            "",
+            $LineSep,
+            "$Star FICHA DA PARTIDA & RESULTADO $Star",
+            $LineSep,
+            "- Confronto: $ConfrontoDesc",
+            "- Resultado / Modo: $PlacarDesc",
+            "- Jogo / Versao: $NomeJogo",
+            "- Torneio / Modo: $Modo",
+            "- Canal: Skimboll2001 (Skimboll desde 2001 | seit 2001 | since 2001)",
+            "",
+            $LineSep,
+            "$Star SOBRE AS EQUIPES EM CAMPO (HISTORIA & TRADICAO) $Star",
+            $LineSep
+        )
+        $LinhasDesc += $BlocoEquipes
+        $LinhasDesc += @(
+            "",
+            $LineSep,
+            "$Star INSCREVA-SE NO CANAL $Star",
+            $LineSep,
+            "Inscreva-se aqui: https://www.youtube.com/channel/UCR1UuLEs-n55oz85e7Lc5gg?sub_confirmation=1",
+            "Gameplays e torneios de International Superstar Soccer Deluxe (ISSD, Charmoso Gaucho, Deutscher Fussball, Champions League, Mundial de Clubes, Campeonato Brasileiro 95-99, Futebol Brasileiro 95-99, Ronaldinho Soccer, ISSD Extended), eFootball, EA Sports FC e FIFA.",
+            "",
+            $LineSep,
+            "$Star PALAVRAS-CHAVE E TERMOS DE BUSCA (SEO) $Star",
+            $LineSep,
+            "$T1, $T2, $ConfrontoDesc, $PlacarDesc, $T1 $($Profile.NomeCompleto), $($Profile.SeoKeywords), $ExtrasLine, Skimboll2001, skimboll 2001.",
+            "",
+            $HashtagsPartida
         )
     }
-    $LinhasDesc += @(
-        "Deixe o Like e inscreva-se para acompanhar todas as partidas e torneios no canal Skimboll2001 (videos novos as 06:00 e as 17:30)!",
-        "",
-        $LineSep,
-        "$Star FICHA DA PARTIDA & RESULTADO $Star",
-        $LineSep,
-        "- Confronto: $ConfrontoDesc",
-        "- Resultado / Modo: $PlacarDesc",
-        "- Jogo / Versao: $NomeJogo",
-        "- Torneio / Modo: $Modo",
-        "- Canal: Skimboll2001 (Skimboll desde 2001 | seit 2001 | since 2001)",
-        "",
-        $LineSep,
-        "$Star SOBRE AS EQUIPES EM CAMPO (HISTORIA & TRADICAO) $Star",
-        $LineSep
-    )
-    $LinhasDesc += $BlocoEquipes
-    $LinhasDesc += @(
-        "",
-        $LineSep,
-        "$Star INSCREVA-SE NO CANAL $Star",
-        $LineSep,
-        "Inscreva-se aqui: https://www.youtube.com/channel/UCR1UuLEs-n55oz85e7Lc5gg?sub_confirmation=1",
-        "Gameplays e torneios de International Superstar Soccer Deluxe (ISSD, Charmoso Gaucho, Deutscher Fussball, Champions League, Mundial de Clubes, Campeonato Brasileiro 95-99, Futebol Brasileiro 95-99, Ronaldinho Soccer, ISSD Extended), eFootball, EA Sports FC e FIFA.",
-        "",
-        $LineSep,
-        "$Star PALAVRAS-CHAVE E TERMOS DE BUSCA (SEO) $Star",
-        $LineSep,
-        "$T1, $T2, $ConfrontoDesc, $PlacarDesc, $T1 $($Profile.NomeCompleto), $($Profile.SeoKeywords), $ExtrasLine, Skimboll2001, skimboll 2001.",
-        "",
-        $HashtagsPartida
-    )
     $Descricao = $LinhasDesc -join "`r`n"
 
     $Tags = @(
@@ -766,7 +821,8 @@ function New-MatchThumbnail {
     $Gfx.FillRectangle((New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(245, 8, 8, 10))), $BarX, $BarY, $BarW, $BarH)
 
     # Sub-badge superior (Nome do Classico / Torneio + Placar Final)
-    $ModoLabel = if ($Modo) { "★  $($Modo.ToUpper())  •  PLACAR FINAL  ★" } else { "★  PLACAR FINAL  •  $($Profile.NomeCurto)  ★" }
+    $ScoreWord = if ($Idioma -eq "EN") { "FINAL SCORE" } else { "PLACAR FINAL" }
+    $ModoLabel = if ($Modo) { "★  $($Modo.ToUpper())  •  $ScoreWord  ★" } else { "★  $ScoreWord  •  $($Profile.NomeCurto)  ★" }
     $BadgeW = 540
     $BadgeX = $BarX + (($BarW - $BadgeW) / 2)
     $Gfx.FillRectangle($BrushSkimRed, $BadgeX, ($BarY - 14), $BadgeW, 24)
@@ -1000,8 +1056,8 @@ switch ($Acao) {
                 description          = $Seo.Descricao
                 tags                 = $Seo.Tags
                 categoryId           = "20"
-                defaultLanguage      = "pt-BR"
-                defaultAudioLanguage = "pt-BR"
+                defaultLanguage      = $(if ($Idioma -eq "EN") { "en" } else { "pt-BR" })
+                defaultAudioLanguage = $(if ($Idioma -eq "EN") { "en" } else { "pt-BR" })
             }
         }
         $UpdateJson = $UpdateObj | ConvertTo-Json -Depth 6 -Compress
@@ -1080,8 +1136,8 @@ switch ($Acao) {
                 description          = $Seo.Descricao
                 tags                 = $Seo.Tags
                 categoryId           = "20"
-                defaultLanguage      = "pt-BR"
-                defaultAudioLanguage = "pt-BR"
+                defaultLanguage      = $(if ($Idioma -eq "EN") { "en" } else { "pt-BR" })
+                defaultAudioLanguage = $(if ($Idioma -eq "EN") { "en" } else { "pt-BR" })
             }
             status  = $StatusObj
         }
