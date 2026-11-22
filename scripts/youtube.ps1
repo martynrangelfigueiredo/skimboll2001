@@ -31,6 +31,7 @@ param(
     [string]$TextoBarraCustom = "",     # Opcional para barra inferior da thumb
     [string]$NotaExtra = "",            # Nota adicional em destaque no topo da descricao
     [string]$SobreEquipes = "",         # Texto descritivo extra sobre a historia/tradicao das equipes da partida
+    [string[]]$TagsExtras = @(),        # Tags adicionais de alto alcance para SEO no YouTube
     [ValidateSet("PT", "EN")]
     [string]$Idioma = "PT",             # Idioma do titulo, descricao e etiquetas da thumbnail (PT ou EN)
     [ValidateSet("1080p", "1440p", "Original")]
@@ -295,9 +296,12 @@ $IssdTeamKeywords = @{
     "Germany"            = "Germany, Deutschland, Die Mannschaft, DFB, Sieke, Kolle, Frohlich, Kuhnert, Klahold, Bergmann, Strauss, Becker, Muller, Stein, German National Team"
     "Antarctica"         = "Antarctica, Antarct, Antarctic National Team, South Pole Football, McMurdo, Rothera, Esperanza Base, Hawker, Solberg, Sarmien, Calder, ISSD Extended"
     "Antartida"          = "Antarctica, Antarct, Antarctic National Team, South Pole Football, Hawker, Solberg, Sarmien, Calder, ISSD Extended"
+    "Panama"             = "Panama, Selecao do Panama, Seleccion de Panama, Los Canaleros, La Marea Roja, FEPAFUT, Concacaf, Estadio Rommel Fernandez, Tejada, Gaitan, Serrano, ISSD Extended"
 }
 
 $IssdTeamProfiles = @{
+    "Alemanha"           = "ALEMANHA (Deutschland / Die Nationalmannschaft - DFB): Tetracampea da Copa do Mundo (1954, 1974, 1990 e 2014) e tricampea da Eurocopa (1972, 1980 e 1996), a Selecao Alema veste sua lendaria camisa branca com detalhes em preto, vermelho e dourado. No International Superstar Soccer Deluxe (ISSD Extended), e uma das selecoes mais poderosas do jogo, comandada pelos classicos craques 16-bit Sieke (camisa 11), Kolle, Klahold (camisa 5), Rilke (camisa 15) e Kuhnert, empilhando 30 finalizacoes na partida sob chuva."
+    "Panama"             = "PANAMA (Seleccion de Futbol de Panama - Los Canaleros / La Marea Roja): Fundada em 1937 (FEPAFUT) e sediada na Cidade do Panama, a selecao panamenha manda seus jogos no historico Estadio Rommel Fernandez e veste seu vibrante uniforme vermelho ('La Marea Roja') com detalhes em azul e branco. Grande forca emergente da CONCACAF (vice-campea da Copa Ouro em 2005, 2013 e 2023 e participante da Copa do Mundo de 2018), conta no ISSD Extended com destaques como o zagueiro/artilheiro Tejada, o meia Gaitan (camisa 7) e Serrano."
     "Germany"            = "GERMANY (Die Nationalmannschaft / DFB): Four-time World Cup champions (1954, 1974, 1990, 2014) and three-time European champions (1972, 1980, 1996). In International Superstar Soccer Deluxe (ISSD Extended), Germany is an offensive powerhouse led by classic 16-bit legends such as Sieke (FW #11), Kolle, and Frohlich. Despite receiving 2 red cards and playing with 9 men on a snowy pitch, Germany unleashed 26 shots to secure a 7-3 victory."
     "Antarctica"         = "ANTARCTICA (Antarctic Selection / Polar Continent XI): Representing the southernmost continent on Earth in ISSD Extended, wearing icy polar blue and white with the white continent silhouette flag. Drawing inspiration from real-life matches played by scientific research stations across the Antarctic ice (such as McMurdo, Rothera, and Esperanza Base), Antarctica features players like Hawker (MF #7), Solberg (DF #4), Sarmien, and Calder, firing 14 shots and scoring 3 goals in a thrilling 10-goal snow match."
     "EintrachtFrankfurt" = "EINTRACHT FRANKFURT: Fundado em 1899 em Frankfurt am Main (Hessen, Alemanha), o Eintracht Frankfurt (conhecido como 'Die Adler' - As Aguias - ou pela sigla SGE) manda seus jogos no tradicional Waldstadion (Deutsche Bank Park) e veste vermelho, preto e branco. E um dos clubes mais historicos da Alemanha, campeao alemao (1959), pentacampeao da Copa da Alemanha (DFB-Pokal) e bicampeao da Copa da UEFA / Europa League (1980 e 2022). Na partida, destaca-se com jogadores como Burkardt, Can Uzun e Ebnoutalib."
@@ -579,14 +583,42 @@ function Build-MatchSeoData {
     }
     $Descricao = $LinhasDesc -join "`r`n"
 
-    $Tags = @(
+    $CandidateTags = @(
         $T1,
         "$T1 $($Profile.NomeCurto)"
     )
     if ($T2) {
-        $Tags += @("$T1 x $T2", "$T1 vs $T2", "$T1 $G1 x $G2 $T2")
+        $CandidateTags += @($T2, "$T1 x $T2", "$T1 vs $T2", "$T1 $G1 x $G2 $T2")
     }
-    $Tags += $Profile.TagsBase
+    if ($TagsExtras -and $TagsExtras.Count -gt 0) {
+        $CandidateTags += $TagsExtras
+    }
+    $CandidateTags += $Profile.TagsBase
+    $CandidateTags += @(
+        "Futebol Retro",
+        "Retro Gaming",
+        "16-bit Soccer",
+        "Classic Football",
+        "Allejo",
+        "Sieke",
+        "Gameplay Futebol",
+        "Copa do Mundo",
+        "World Cup"
+    )
+
+    # Empacota o maximo de tags unicas respeitando o limite de 500 caracteres da API do YouTube
+    $Tags = @()
+    $TotalChars = 0
+    foreach ($tg in $CandidateTags) {
+        $cleanTg = "$tg".Trim()
+        if (-not $cleanTg) { continue }
+        if ($Tags -contains $cleanTg) { continue }
+        $addedLen = $cleanTg.Length + $(if ($cleanTg -match "\s") { 3 } else { 1 })
+        if (($TotalChars + $addedLen) -le 475) {
+            $Tags += $cleanTg
+            $TotalChars += $addedLen
+        }
+    }
 
     return @{
         Titulo    = $Titulo
