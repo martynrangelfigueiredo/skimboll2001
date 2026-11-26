@@ -37,6 +37,7 @@ param(
     [ValidateSet("1080p", "1440p", "Original")]
     [string]$QualidadeUpload = "1440p", # Upscale Pixel-Perfect (NearestNeighbor) automatico para 1440p60 (VP9) ou 1080p60
     [string]$ArquivoThumb,
+    [string]$ArquivoBoxArt,
     [string]$ImagemLance,
     [string]$ImagemPlacar
 )
@@ -237,14 +238,25 @@ function Get-GameProfile {
         $ExtraHash    += " #CampeonatoBrasileiro #Brasileirao$AnoFinal #ForteECampeao #ROMHACK"
         $ExtraTags    += @("ISSD Campeonato Brasileiro$SufixoAno", "Campeonato Brasileiro $AnoFinal", "Forte e Campeao")
     }
-    elseif ($Combined -match "(?i)futebol\s*brasileiro") {
+    elseif ($Combined -match "(?i)f[uú]t(?:e)?bol\s*brasileiro") {
         $NomeCurto     = "FUTEBOL BRASILEIRO$SufixoAno"
         $NomeCompleto  = "ISSD Futebol Brasileiro$SufixoAno"
         $SubThumb      = "ISSD FUTEBOL BRASILEIRO$SufixoAno • 16-BIT"
-        $BoxTitleLines = @("ISSD:", "FUTEBOL", "BRASILEIRO", $(if ($AnoFinal) { $AnoFinal } else { "96" }))
-        $ExtraSeo     += ", ISSD Futebol Brasileiro$SufixoAno, Futebol Brasileiro $AnoFinal, Campeonato Brasileiro ISSD, Brasileirao Anos 90"
+        $BoxArtBg      = "bg-boxart-futebol-brasileiro-2010.png"
+        $BoxTitleLines = @()
+        $ExtraSeo     += ", ISSD Futebol Brasileiro$SufixoAno, Futebol Brasileiro $AnoFinal, Campeonato Brasileiro ISSD, Brasileirao, Futbol Brasileiro $AnoFinal, ROMHACK"
         $ExtraHash    += " #FutebolBrasileiro #FutebolBrasileiro$AnoFinal #Brasileirao #ROMHACK"
         $ExtraTags    += @("ISSD Futebol Brasileiro$SufixoAno", "Futebol Brasileiro $AnoFinal", "Campeonato Brasileiro ISSD")
+    }
+    elseif ($Combined -match "(?i)f[uú]t(?:e)?bol\s*argentino|campeonato\s*argentino") {
+        $NomeCurto     = "FUTBOL ARGENTINO$SufixoAno"
+        $NomeCompleto  = "ISSD Fútbol Argentino$SufixoAno"
+        $SubThumb      = "ISSD FUTBOL ARGENTINO$SufixoAno • 16-BIT"
+        $BoxArtBg      = "bg-boxart-futbol-argentino-96.png"
+        $BoxTitleLines = @()
+        $ExtraSeo     += ", ISSD Futbol Argentino$SufixoAno, Futbol Argentino $AnoFinal, Campeonato Argentino ISSD, River Plate, Boca Juniors, Superliga Argentina, ROMHACK"
+        $ExtraHash    += " #FutbolArgentino #FutbolArgentino$AnoFinal #RiverPlate #ROMHACK"
+        $ExtraTags    += @("ISSD Futbol Argentino$SufixoAno", "Futbol Argentino $AnoFinal", "Campeonato Argentino ISSD")
     }
     elseif ($Combined -match "(?i)ronaldinho") {
         $NomeCurto     = "RONALDINHO SOCCER$SufixoAno"
@@ -299,9 +311,19 @@ $IssdTeamKeywords = @{
     "Panama"             = "Panama, Selecao do Panama, Seleccion de Panama, Los Canaleros, La Marea Roja, FEPAFUT, Concacaf, Estadio Rommel Fernandez, Tejada, Gaitan, Serrano, ISSD Extended"
     "UAE"                = "UAE, United Arab Emirates, Emirados Arabes Unidos, Al Abyad, The Whites, UAEFA, Zayed Sports City, Abu Dhabi, Dubai, Hamadi, Shamsi, AFC Asian Cup, World Cup 1990, ISSD Extended"
     "EmiradosArabes"     = "UAE, United Arab Emirates, Emirados Arabes Unidos, Al Abyad, The Whites, UAEFA, Zayed Sports City, Abu Dhabi, Dubai, Hamadi, Shamsi, ISSD Extended"
+    "Barcelona"          = "FC Barcelona, Barcelona, Barca, Blaugrana, Camp Nou, Catalunha, David Villa, Iniesta, Messi, Xavi, Guardiola, Barcelona 2010"
+    "Internacional"      = "Sport Club Internacional, Internacional, Inter-RS, Colorado, Beira-Rio, Porto Alegre, Tinga, Alecsandro, Leandro Damiao, Derley, D'Alessandro, Gre-Nal, Libertadores 2010"
+    "Gremio"             = "Gremio, Gremio FBPA, Imortal Tricolor, Tricolor Gaucho, Estadio Olimpico, Arena do Gremio, Porto Alegre, Fabio Rochemback, Classico Gre-Nal, Grenal"
+    "RiverPlate"         = "Club Atletico River Plate, River Plate, Los Millonarios, La Banda Roja, Estadio Monumental, Buenos Aires, Enzo Francescoli, Hernan Diaz, Roberto Monserrat, Ortega, Crespo, Libertadores 1996"
+    "Estonia"            = "Estonia, Selecao da Estonia, Eesti Jalgpallikoondis, Sinisargid, Tallinn, A. Le Coq Arena, Jorvik, Farsten, ISSD Extended"
 }
 
 $IssdTeamProfiles = @{
+    "Barcelona"          = "FC BARCELONA (Blaugrana - Catalunha, Espanha): Fundado em 1899 e mandando seus jogos no lendario Camp Nou, o Barcelona de 2010 e lembrado como um dos maiores esquadroes da historia do futebol mundial (multicampeao espanhol, europeu e mundial). Na partida pelo ISSD Futebol Brasileiro 2010, veste seu tradicional manto azul-grená e conta com craques como Andres Iniesta (camisa 8) e David Villa (autor do primeiro gol da partida no 1o tempo)."
+    "Internacional"      = "SPORT CLUB INTERNACIONAL (Colorado / Clube do Povo - Porto Alegre-RS): Fundado em 4 de abril de 1909 e sediado no gigante Estadio Beira-Rio, o Internacional viveu em 2010 um ano magico com a conquista do Bicampeonato da Copa Libertadores da America (alem do Mundial de Clubes de 2006, onde derrotou justamente o Barcelona!). No ISSD Futebol Brasileiro 2010, o Colorado brilha com nomes como Tinga (camisa 7), Alecsandro, Derley (camisa 12) e o artilheiro Leandro Damiao."
+    "Gremio"             = "GREMIO FOOT-BALL PORTO ALEGRENSE (Imortal Tricolor - Porto Alegre-RS): Fundado em 15 de setembro de 1903 em Porto Alegre, o Gremio (Tricampeao da Libertadores, Campeao Mundial em 1983 e Pentacampeao da Copa do Brasil) veste suas tradicionais listras verticais em azul celeste, preto e branco e protagoniza com o Internacional o lendario Classico Gre-Nal. Na partida pelo ISSD Futebol Brasileiro 2010, conta com o meio-campista Fabio Rochemback (camisa 8) e finaliza 12 vezes ao gol."
+    "RiverPlate"         = "CLUB ATLETICO RIVER PLATE (Los Millonarios / La Banda Roja - Buenos Aires, Argentina): Fundado em 25 de maio de 1901 e mandando seus jogos no historico Estadio Monumental de Nunez, o River Plate e o maior campeao do Campeonato Argentino e tetracampeao da Libertadores (incluindo o lendario titulo de 1996!). No ISSD Futbol Argentino 96, veste sua iconica camisa branca com a faixa diagonal vermelha e conta com lendas como o Principe Enzo Francescoli (camisa 10), Roberto 'El Diablo' Monserrat (camisa 8) e Hernan Diaz (camisa 2)."
+    "Estonia"            = "ESTONIA (Eesti Jalgpallikoondis - Sinisargid / The Blueshirts): Fundada em 1921 (EJL) e sediada em Tallinn (A. Le Coq Arena), a Selecao da Estonia representa o pais baltico com as tradicionais cores azul, preto e branco de sua bandeira nacional. Estreando como selecao expandida no projeto ISSD Extended, a equipe estoniana entra em campo liderada pelo atacante Jorvik (camisa 10) e pelo meio-campista Farsten (camisa 6), somando 6 finalizacoes diante da Selecao Alema."
     "UAE"                = "UAE / EMIRADOS ARABES UNIDOS (United Arab Emirates - Al Abyad / The Whites): Fundada em 1971 (UAEFA) e sediada em Abu Dhabi e Dubai (mandando jogos historicos no Zayed Sports City Stadium), a selecao dos Emirados Arabes Unidos veste tradicionalmente branco e vermelho (com as cores pan-arabes vermelho, verde, branco e preto na bandeira). Participante da Copa do Mundo de 1990 (onde enfrentou justamente a Alemanha na fase de grupos!), vice-campea da Copa da Asia da AFC (1996) e bicampea da Copa do Golfo (2007 e 2013), conta no ISSD Extended com jogadores como Hamadi (camisa 5) e Shamsi (camisa 8)."
     "Alemanha"           = "ALEMANHA (Deutschland / Die Nationalmannschaft - DFB): Tetracampea da Copa do Mundo (1954, 1974, 1990 e 2014) e tricampea da Eurocopa (1972, 1980 e 1996), a Selecao Alema veste sua lendaria camisa branca com detalhes em preto, vermelho e dourado. No International Superstar Soccer Deluxe (ISSD Extended), e uma das selecoes mais poderosas do jogo, comandada pelos classicos craques 16-bit Sieke (camisa 11), Kolle, Klahold (camisa 5), Rilke (camisa 15) e Kuhnert, empilhando 30 finalizacoes na partida sob chuva."
     "Panama"             = "PANAMA (Seleccion de Futbol de Panama - Los Canaleros / La Marea Roja): Fundada em 1937 (FEPAFUT) e sediada na Cidade do Panama, a selecao panamenha manda seus jogos no historico Estadio Rommel Fernandez e veste seu vibrante uniforme vermelho ('La Marea Roja') com detalhes em azul e branco. Grande forca emergente da CONCACAF (vice-campea da Copa Ouro em 2005, 2013 e 2023 e participante da Copa do Mundo de 2018), conta no ISSD Extended com destaques como o zagueiro/artilheiro Tejada, o meia Gaitan (camisa 7) e Serrano."
@@ -712,8 +734,9 @@ function New-MatchThumbnail {
 
     # 1. FUNDO ESTILO BOX-ART 16-BIT (De acordo com cada jogo/ROMHACK)
     $BoxArtLoaded = $false
-    if ($Profile.BoxArtBg) {
-        $CandidateBoxBg = Join-Path $ThumbsDir $Profile.BoxArtBg
+    $ChosenBoxArt = if ($ArquivoBoxArt) { $ArquivoBoxArt } else { $Profile.BoxArtBg }
+    if ($ChosenBoxArt) {
+        $CandidateBoxBg = if (Test-Path $ChosenBoxArt) { $ChosenBoxArt } else { Join-Path $ThumbsDir $ChosenBoxArt }
         if (Test-Path $CandidateBoxBg) {
             $BgImg = [System.Drawing.Image]::FromFile((Resolve-Path $CandidateBoxBg).Path)
             $Gfx.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
